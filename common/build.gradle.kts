@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.devtools.ksp)
 }
 
 android {
@@ -34,7 +35,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
 }
 
@@ -56,6 +57,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // decoration
+    implementation(libs.androidx.compose.material.icons.extended)
+
     // koin
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
@@ -63,4 +67,9 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     testImplementation(libs.koin.android.test)
     testImplementation(libs.koin.test.jvm)
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }

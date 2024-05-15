@@ -34,7 +34,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
 }
 
@@ -65,4 +65,4 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     testImplementation(libs.koin.android.test)
     testImplementation(libs.koin.test.jvm)
- }
+}
