@@ -8,7 +8,7 @@ sealed interface Record {
         val moodGraphData: MoodGraphData? = null,
         val moments: List<Moment>? = null,
         val songOfTheDay: Song? = null,
-        val notes: String? = null,
+        val note: String? = null,
     ) : Record {
         val averageMood: Mood
             get() = Mood(moments?.map { it.mood.score }?.average() ?: 0.0)
@@ -19,7 +19,7 @@ sealed interface Record {
         val mood: Mood,
         val emotions: List<Emotion>? = null,
         val songOfTheMoment: Song? = null,
-        val notes: String? = null,
+        val note: String? = null,
     ) : Record
 
 }

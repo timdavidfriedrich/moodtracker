@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import de.timdavidfriedrich.moodtracker.common.data.entities.DayRecordEntity
-import de.timdavidfriedrich.moodtracker.common.data.entities.DayRecordWithMomentRecordsRelation
+import de.timdavidfriedrich.moodtracker.common.data.relations.DayRecordWithMomentRecordsRelation
 
 @Dao
 interface DayRecordDao {

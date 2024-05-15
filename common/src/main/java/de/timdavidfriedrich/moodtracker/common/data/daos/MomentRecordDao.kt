@@ -8,7 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import de.timdavidfriedrich.moodtracker.common.data.entities.MomentRecordEntity
-import de.timdavidfriedrich.moodtracker.common.data.entities.MomentRecordWithEmotionsRelation
+import de.timdavidfriedrich.moodtracker.common.data.relations.MomentRecordWithEmotionsRelation
 
 @Dao
 interface MomentRecordDao {

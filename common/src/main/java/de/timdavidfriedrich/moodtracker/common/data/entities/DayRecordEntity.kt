@@ -17,5 +17,5 @@ data class DayRecordEntity(
     val moodGraphData: MoodGraphDataEntity? = null,
     @Embedded(prefix = "songOfTheDay")
     val songOfTheDay: SongEntity? = null,
-    val notes: String? = null,
+    val note: String? = null,
 )

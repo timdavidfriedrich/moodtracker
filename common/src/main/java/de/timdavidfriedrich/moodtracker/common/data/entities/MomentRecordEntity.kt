@@ -18,5 +18,5 @@ data class MomentRecordEntity(
     val dayRecordId: Long? = null,
     @Embedded(prefix = "songOfTheMoment")
     val songOfTheMoment: SongEntity? = null,
-    val notes: String? = null,
+    val note: String? = null,
 )
