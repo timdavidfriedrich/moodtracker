@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="day_record_title">How have u been today?</string>
+    <string name="todays_moods_card_title">Today\'s moods</string>
+    <string name="todays_moods_card_add_moment_label">Add a mood</string>
 </resources>

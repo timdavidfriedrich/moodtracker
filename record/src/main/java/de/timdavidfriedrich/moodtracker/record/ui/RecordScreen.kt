@@ -16,6 +16,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import de.timdavidfriedrich.moodtracker.record.R
+import de.timdavidfriedrich.moodtracker.record.ui.components.DateCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.MoodSliderCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.TodaysMoodsCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -59,7 +62,7 @@ fun RecordScreen(
 }
 
 @Composable
-fun RecordScreenLoading(
+private fun RecordScreenLoading(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -70,7 +73,7 @@ fun RecordScreenLoading(
 }
 
 @Composable
-fun RecordScreenError(
+private fun RecordScreenError(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -81,7 +84,7 @@ fun RecordScreenError(
 }
 
 @Composable
-fun RecordScreenSuccess(
+private fun RecordScreenSuccess(
     uiState: RecordUiState.Success,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit,
@@ -89,13 +92,19 @@ fun RecordScreenSuccess(
     Column(
         modifier = modifier,
     ) {
-        Text("Test")
+        DateCard(uiState)
+        if (uiState is RecordUiState.Success.Day) {
+            TodaysMoodsCard(uiState, modifier, onAction)
+        }
+        if (uiState is RecordUiState.Success.Moment) {
+            MoodSliderCard(uiState, modifier, onAction)
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecordTopBar(
+private fun RecordTopBar(
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {

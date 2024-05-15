@@ -6,7 +6,7 @@ sealed interface Record {
     data class Day(
         val date: Date,
         val moodGraphData: MoodGraphData? = null,
-        val moments: List<Moment>? = null,
+        val moments: List<Moment> = listOf(),
         val songOfTheDay: Song? = null,
         val note: String? = null,
     ) : Record {
@@ -17,7 +17,7 @@ sealed interface Record {
     data class Moment(
         val date: Date,
         val mood: Mood,
-        val emotions: List<Emotion>? = null,
+        val emotions: List<Emotion> = listOf(),
         val songOfTheMoment: Song? = null,
         val note: String? = null,
     ) : Record
