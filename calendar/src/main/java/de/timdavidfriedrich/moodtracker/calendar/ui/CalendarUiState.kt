@@ -5,6 +5,7 @@ import java.time.YearMonth
 
 sealed interface CalendarUiState {
     data object Loading : CalendarUiState
+    data object Error : CalendarUiState
     data class Success(
         val isMonthPickerVisible: Boolean = false,
         val calendarType: CalendarType = CalendarType.Overview,

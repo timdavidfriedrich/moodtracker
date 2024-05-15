@@ -25,12 +25,20 @@ fun NavigationHost(
         composable(
             route = CalendarDestination.route,
         ) {
-            CalendarScreen()
+            CalendarScreen(
+                onAddClick = {
+                    navController.navigate(RecordDestination.route)
+                }
+            )
         }
         composable(
             route = RecordDestination.route,
         ) {
-            RecordScreen()
+            RecordScreen(
+                onBackClick = {
+                    navController.popBackStack(CalendarDestination.route, false)
+                }
+            )
         }
     }
 }

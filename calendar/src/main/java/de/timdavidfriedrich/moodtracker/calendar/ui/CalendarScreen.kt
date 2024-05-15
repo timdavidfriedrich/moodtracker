@@ -3,7 +3,11 @@ package de.timdavidfriedrich.moodtracker.calendar.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,21 +25,25 @@ import org.koin.androidx.compose.koinViewModel
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = koinViewModel<CalendarViewModel>(),
+    onAddClick: () -> Unit,
 ) {
     val uiState = viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = { CalendarTopBar() },
+        floatingActionButton = {
+            CalendarFloatingActionButton(
+                onAction = { onAddClick() }
+            )
+        },
         modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding),
         ) {
             when (val value = uiState.value) {
-                is CalendarUiState.Loading -> {
-                    CalendarScreenLoading(value, modifier)
-                }
-
+                is CalendarUiState.Loading -> CalendarScreenLoading(modifier)
+                is CalendarUiState.Error -> CalendarScreenError(modifier)
                 is CalendarUiState.Success -> {
                     CalendarScreenSuccess(
                         uiState = value,
@@ -50,7 +58,17 @@ fun CalendarScreen(
 
 @Composable
 fun CalendarScreenLoading(
-    uiState: CalendarUiState.Loading,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+
+    }
+}
+
+@Composable
+fun CalendarScreenError(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -93,4 +111,17 @@ fun CalendarTopBar(
         title = { Text(stringResource(R.string.app_name)) },
         modifier = modifier,
     )
+}
+
+@Composable
+fun CalendarFloatingActionButton(
+    modifier: Modifier = Modifier,
+    onAction: (CalendarAction) -> Unit = {},
+) {
+    LargeFloatingActionButton(
+        onClick = { onAction(CalendarAction.AddRecord) },
+        modifier = modifier,
+    ) {
+        Icon(Icons.Rounded.Add, null)
+    }
 }

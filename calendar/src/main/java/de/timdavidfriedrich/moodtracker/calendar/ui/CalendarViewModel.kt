@@ -16,9 +16,7 @@ class CalendarViewModel(
 
 ) : ViewModel() {
 
-    private var _uiState: MutableStateFlow<CalendarUiState> =
-        MutableStateFlow(CalendarUiState.Loading)
-
+    private var _uiState = MutableStateFlow<CalendarUiState>(CalendarUiState.Loading)
     val uiState: StateFlow<CalendarUiState> = _uiState.asStateFlow()
 
     init {
