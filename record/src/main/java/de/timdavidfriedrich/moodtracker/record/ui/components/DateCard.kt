@@ -9,7 +9,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun DateCard(
@@ -33,5 +38,19 @@ fun DateCard(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun DateCardPreview() {
+    MoodTrackerTheme {
+        DateCard(
+            uiState = RecordUiState.Success.Day(
+                dayRecord = Record.Day(
+                    date = Date.from(Instant.now()),
+                )
+            )
+        )
     }
 }

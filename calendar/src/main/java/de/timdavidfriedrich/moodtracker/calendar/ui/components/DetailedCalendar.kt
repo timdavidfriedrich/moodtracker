@@ -4,8 +4,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
+import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun DetailedCalendar(
@@ -21,5 +26,25 @@ fun DetailedCalendar(
                 DetailedCalendarRow(dayRecord, onAction)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailedCalendarPreview() {
+    MoodTrackerTheme {
+        DetailedCalendar(
+            uiState = CalendarUiState.Success(
+                dayRecords = listOf(
+                    Record.Day(
+                        date = Date.from(Instant.now()),
+                    ),
+                    Record.Day(
+                        date = Date.from(Instant.now()),
+                    ),
+                ),
+            ),
+            onAction = {},
+        )
     }
 }

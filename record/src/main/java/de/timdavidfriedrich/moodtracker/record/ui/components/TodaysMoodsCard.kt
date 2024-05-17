@@ -12,10 +12,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import de.timdavidfriedrich.moodtracker.common.domain.Mood
 import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun TodaysMoodsCard(
@@ -55,5 +60,33 @@ private fun TodaysMoodsCardItem(
         modifier = modifier,
     ) {
         Text(text = "${moment.date}")
+    }
+}
+
+@Preview
+@Composable
+fun TodaysMoodsCardPreview() {
+    MoodTrackerTheme {
+        TodaysMoodsCard(
+            uiState = RecordUiState.Success.Day(
+                dayRecord = Record.Day(
+                    date = Date.from(Instant.now()),
+                    moments = listOf(
+                        Record.Moment(
+                            date = Date.from(Instant.now()),
+                            mood = Mood(
+                                score = 0.5,
+                            ),
+                        ),
+                        Record.Moment(
+                            date = Date.from(Instant.now()),
+                            mood = Mood(
+                                score = 0.5,
+                            ),
+                        ),
+                    ),
+                )
+            )
+        )
     }
 }
