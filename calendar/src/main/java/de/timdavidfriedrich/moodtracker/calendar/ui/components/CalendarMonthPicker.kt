@@ -54,7 +54,7 @@ fun CalendarMonthPicker(
 
 @Preview(showBackground = true)
 @Composable
-fun CalendarMonthPickerPreview() {
+private fun CalendarMonthPickerPreview() {
     MoodTrackerTheme {
         CalendarMonthPicker(CalendarUiState.Success())
     }

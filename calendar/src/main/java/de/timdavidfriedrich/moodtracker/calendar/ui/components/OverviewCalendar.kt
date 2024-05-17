@@ -29,7 +29,7 @@ fun OverviewCalendar(
 
 @Preview(showBackground = true)
 @Composable
-fun OverviewCalendarPreview() {
+private fun OverviewCalendarPreview() {
     MoodTrackerTheme {
         OverviewCalendar(
             uiState = CalendarUiState.Success(

@@ -57,7 +57,7 @@ fun CalendarScreen(
 }
 
 @Composable
-fun CalendarScreenLoading(
+private fun CalendarScreenLoading(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -68,7 +68,7 @@ fun CalendarScreenLoading(
 }
 
 @Composable
-fun CalendarScreenError(
+private fun CalendarScreenError(
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -79,7 +79,7 @@ fun CalendarScreenError(
 }
 
 @Composable
-fun CalendarScreenSuccess(
+private fun CalendarScreenSuccess(
     uiState: CalendarUiState.Success,
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {}
@@ -104,7 +104,7 @@ fun CalendarScreenSuccess(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarTopBar(
+private fun CalendarTopBar(
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
@@ -114,7 +114,7 @@ fun CalendarTopBar(
 }
 
 @Composable
-fun CalendarFloatingActionButton(
+private fun CalendarFloatingActionButton(
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {},
 ) {

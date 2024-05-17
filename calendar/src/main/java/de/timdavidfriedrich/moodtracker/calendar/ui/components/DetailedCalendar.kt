@@ -31,7 +31,7 @@ fun DetailedCalendar(
 
 @Preview(showBackground = true)
 @Composable
-fun DetailedCalendarPreview() {
+private fun DetailedCalendarPreview() {
     MoodTrackerTheme {
         DetailedCalendar(
             uiState = CalendarUiState.Success(

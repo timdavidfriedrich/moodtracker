@@ -6,15 +6,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
 import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
+import java.time.Instant
 import java.time.ZoneId
+import java.util.Date
 
 @Composable
 fun OverviewCalendarItem(
     dayRecord: Record.Day,
-    onAction: (CalendarAction) -> Unit,
     modifier: Modifier = Modifier,
+    onAction: (CalendarAction) -> Unit = {},
 ) {
     val localDate = dayRecord.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 
@@ -23,5 +27,17 @@ fun OverviewCalendarItem(
     ) {
         Icon(dayRecord.averageMood.icon, dayRecord.averageMood.level.toString())
         Text(text = "${localDate.dayOfMonth}")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OverviewCalendarItemPreview() {
+    MoodTrackerTheme {
+        OverviewCalendarItem(
+            dayRecord = Record.Day(
+                date = Date.from(Instant.now()),
+            ),
+        )
     }
 }

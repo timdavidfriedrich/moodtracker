@@ -65,7 +65,7 @@ private fun TodaysMoodsCardItem(
 
 @Preview
 @Composable
-fun TodaysMoodsCardPreview() {
+private fun TodaysMoodsCardPreview() {
     MoodTrackerTheme {
         TodaysMoodsCard(
             uiState = RecordUiState.Success.Day(

@@ -43,7 +43,7 @@ fun DateCard(
 
 @Preview
 @Composable
-fun DateCardPreview() {
+private fun DateCardPreview() {
     MoodTrackerTheme {
         DateCard(
             uiState = RecordUiState.Success.Day(

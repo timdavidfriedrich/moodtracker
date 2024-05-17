@@ -73,7 +73,7 @@ fun CalendarBar(
 
 @Preview(showBackground = true)
 @Composable
-fun CalendarBarPreview() {
+private fun CalendarBarPreview() {
     MoodTrackerTheme {
         CalendarBar(CalendarUiState.Success())
     }

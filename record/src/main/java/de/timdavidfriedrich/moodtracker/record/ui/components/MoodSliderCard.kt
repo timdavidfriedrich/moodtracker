@@ -31,7 +31,7 @@ fun MoodSliderCard(
 
 @Preview
 @Composable
-fun MoodSliderCardPreview() {
+private fun MoodSliderCardPreview() {
     MoodTrackerTheme {
         MoodSliderCard(
             uiState = RecordUiState.Success.Moment(

@@ -9,9 +9,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
 import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
+import java.time.Instant
 import java.time.ZoneId
+import java.util.Date
 
 @Composable
 fun DetailedCalendarRow(
@@ -36,5 +40,18 @@ fun DetailedCalendarRow(
         ) {
             Text(dayRecord.moments?.size.toString())
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailedCalendarRowPreview() {
+    MoodTrackerTheme {
+        DetailedCalendarRow(
+            dayRecord = Record.Day(
+                date = Date.from(Instant.now()),
+            ),
+            onAction = {},
+        )
     }
 }
