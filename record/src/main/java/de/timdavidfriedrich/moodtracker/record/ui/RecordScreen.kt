@@ -17,7 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.components.DateCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.EmotionsCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.MoodGraphCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.MoodSliderCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.NoteCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.SongCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.TodaysMoodsCard
 import org.koin.androidx.compose.koinViewModel
 
@@ -26,6 +30,7 @@ fun RecordScreen(
     modifier: Modifier = Modifier,
     viewModel: RecordViewModel = koinViewModel<RecordViewModel>(),
     onBackClick: () -> Unit = {},
+    onToggleRecordType: () -> Unit = {},
 ) {
     val uiState = viewModel.uiState.collectAsState()
 
@@ -94,11 +99,17 @@ private fun RecordScreenSuccess(
     ) {
         DateCard(uiState)
         if (uiState is RecordUiState.Success.Day) {
-            TodaysMoodsCard(uiState, modifier, onAction)
+            MoodGraphCard(uiState, Modifier, onAction)
         }
         if (uiState is RecordUiState.Success.Moment) {
-            MoodSliderCard(uiState, modifier, onAction)
+            MoodSliderCard(uiState, Modifier, onAction)
         }
+        EmotionsCard(uiState, Modifier, onAction)
+        if (uiState is RecordUiState.Success.Day) {
+            TodaysMoodsCard(uiState, Modifier, onAction)
+        }
+        SongCard(uiState, Modifier, onAction)
+        NoteCard(uiState, Modifier, onAction)
     }
 }
 

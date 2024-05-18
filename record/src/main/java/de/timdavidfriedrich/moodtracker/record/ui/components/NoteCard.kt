@@ -1,6 +1,7 @@
 package de.timdavidfriedrich.moodtracker.record.ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,7 +26,9 @@ fun NoteCard(
     Card(
         modifier = modifier,
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             Text(stringResource(R.string.note_card_title))
             TextField(
                 value = uiState.record.note ?: "",
