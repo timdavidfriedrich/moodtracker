@@ -33,7 +33,7 @@ fun TodaysMoodsCard(
     ) {
         Text(text = stringResource(R.string.todays_moods_card_title))
         Column {
-            uiState.dayRecord.moments.forEach { moment ->
+            uiState.record.moments.forEach { moment ->
                 TodaysMoodsCardItem(moment, modifier, onAction)
             }
         }
@@ -69,7 +69,7 @@ private fun TodaysMoodsCardPreview() {
     MoodTrackerTheme {
         TodaysMoodsCard(
             uiState = RecordUiState.Success.Day(
-                dayRecord = Record.Day(
+                record = Record.Day(
                     date = Date.from(Instant.now()),
                     moments = listOf(
                         Record.Moment(

@@ -23,7 +23,7 @@ fun MoodSliderCard(
         modifier = modifier,
     ) {
         Slider(
-            value = uiState.momentRecord.mood.score.toFloat(),
+            value = uiState.record.mood.score.toFloat(),
             onValueChange = { onAction(RecordAction.Moment.MoodSliderChange(it)) },
         )
     }
@@ -35,7 +35,7 @@ private fun MoodSliderCardPreview() {
     MoodTrackerTheme {
         MoodSliderCard(
             uiState = RecordUiState.Success.Moment(
-                momentRecord = Record.Moment(
+                record = Record.Moment(
                     date = Date.from(Instant.now()),
                     mood = Mood(
                         score = 0.5,

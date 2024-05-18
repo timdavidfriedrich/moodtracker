@@ -2,24 +2,38 @@ package de.timdavidfriedrich.moodtracker.common.domain
 
 import java.util.Date
 
-sealed interface Record {
+sealed class Record {
+    abstract val date: Date
+    abstract val note: String?
+    abstract val song: Song?
+    abstract val emotions: List<Emotion>
+
     data class Day(
-        val date: Date,
+        override val date: Date,
+        override val emotions: List<Emotion> = listOf(),
+        override val note: String? = null,
+        override val song: Song? = null,
         val moodGraphData: MoodGraphData? = null,
         val moments: List<Moment> = listOf(),
-        val songOfTheDay: Song? = null,
-        val note: String? = null,
-    ) : Record {
+    ) : Record() {
         val averageMood: Mood
-            get() = Mood(moments?.map { it.mood.score }?.average() ?: 0.0)
+            get() {
+                return Mood(
+                    score = moments
+                        .map { it.mood.score }
+                        .average()
+                        .takeIf { !it.isNaN() }
+                        ?: 0.0
+                )
+            }
     }
 
     data class Moment(
-        val date: Date,
+        override val date: Date,
+        override val emotions: List<Emotion> = listOf(),
+        override val note: String? = null,
+        override val song: Song? = null,
         val mood: Mood,
-        val emotions: List<Emotion> = listOf(),
-        val songOfTheMoment: Song? = null,
-        val note: String? = null,
-    ) : Record
+    ) : Record()
 
 }

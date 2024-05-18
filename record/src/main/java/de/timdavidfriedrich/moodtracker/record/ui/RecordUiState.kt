@@ -6,12 +6,14 @@ sealed interface RecordUiState {
     data object Loading : RecordUiState
     data object Error : RecordUiState
     sealed class Success : RecordUiState {
+        abstract val record: Record
+
         data class Day(
-            val dayRecord: Record.Day,
+            override val record: Record.Day,
         ) : Success()
 
         data class Moment(
-            val momentRecord: Record.Moment,
+            override val record: Record.Moment,
         ) : Success()
     }
 }

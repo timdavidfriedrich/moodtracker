@@ -14,7 +14,7 @@ class RecordViewModel : ViewModel() {
 
     init {
         _uiState.value = RecordUiState.Success.Day(
-            dayRecord = Record.Day(
+            record = Record.Day(
                 date = Date.from(Instant.now()),
                 note = "I'm feeling great!"
             ),

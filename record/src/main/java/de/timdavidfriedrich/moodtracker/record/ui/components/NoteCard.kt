@@ -1,48 +1,51 @@
 package de.timdavidfriedrich.moodtracker.record.ui.components
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.common.domain.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
+import de.timdavidfriedrich.moodtracker.record.R
+import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
 import java.time.Instant
 import java.util.Date
 
 @Composable
-fun DateCard(
+fun NoteCard(
     uiState: RecordUiState.Success,
     modifier: Modifier = Modifier,
+    onAction: (RecordAction) -> Unit = {},
 ) {
     Card(
         modifier = modifier,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(Icons.Rounded.CalendarToday, null)
-            Text(text = "${uiState.record.date}")
+        Column {
+            Text(stringResource(R.string.note_card_title))
+            TextField(
+                value = uiState.record.note ?: "",
+                onValueChange = { onAction(RecordAction.NoteChange(it)) },
+            )
         }
     }
 }
 
 @Preview
 @Composable
-private fun DateCardPreview() {
+private fun NoteCardPreview() {
     MoodTrackerTheme {
-        DateCard(
+        NoteCard(
             uiState = RecordUiState.Success.Day(
                 record = Record.Day(
                     date = Date.from(Instant.now()),
-                )
-            )
+                    note = "Test note 123, yooyoyo",
+                ),
+            ),
         )
     }
 }
