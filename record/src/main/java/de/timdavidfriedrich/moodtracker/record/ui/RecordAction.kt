@@ -11,9 +11,11 @@ sealed interface RecordAction {
     sealed interface Day : RecordAction {
         data object AddMomentRecord : Day
         data object ResetMoodGraph : Day
+        data object Save : Day
     }
 
     sealed interface Moment : RecordAction {
         data class MoodSliderChange(val score: Float) : Moment
+        data object Save : Moment
     }
 }

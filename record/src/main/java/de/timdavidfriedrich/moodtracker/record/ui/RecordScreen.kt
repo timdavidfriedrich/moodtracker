@@ -1,10 +1,13 @@
 package de.timdavidfriedrich.moodtracker.record.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,6 +17,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.components.DateCard
@@ -30,7 +34,7 @@ fun RecordScreen(
     modifier: Modifier = Modifier,
     viewModel: RecordViewModel = koinViewModel<RecordViewModel>(),
     onBackClick: () -> Unit = {},
-    onToggleRecordType: () -> Unit = {},
+    onAddMomentClick: () -> Unit = {},
 ) {
     val uiState = viewModel.uiState.collectAsState()
 
@@ -51,12 +55,15 @@ fun RecordScreen(
                 is RecordUiState.Success -> {
                     RecordScreenSuccess(
                         uiState = value,
-                        modifier = modifier,
+                        modifier = modifier.padding(
+                            start = dimensionResource(R.dimen.padding_default),
+                            end = dimensionResource(R.dimen.padding_default),
+                        ),
                         onAction = {
-                            if (it is RecordAction.BackClick) {
-                                onBackClick()
-                            } else {
-                                viewModel.onAction(it)
+                            when (it) {
+                                is RecordAction.BackClick -> onBackClick()
+                                is RecordAction.Day.AddMomentRecord -> onAddMomentClick()
+                                else -> viewModel.onAction(it)
                             }
                         }
                     )
@@ -95,6 +102,7 @@ private fun RecordScreenSuccess(
     onAction: (RecordAction) -> Unit,
 ) {
     Column(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_default)),
         modifier = modifier,
     ) {
         DateCard(uiState)
@@ -110,6 +118,12 @@ private fun RecordScreenSuccess(
         }
         SongCard(uiState, Modifier, onAction)
         NoteCard(uiState, Modifier, onAction)
+        Button(
+            onClick = { onAction(RecordAction.Moment.Save) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = stringResource(id = R.string.moment_record_save_label))
+        }
     }
 }
 

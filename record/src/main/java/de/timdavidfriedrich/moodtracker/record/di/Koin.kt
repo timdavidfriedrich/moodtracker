@@ -8,7 +8,11 @@ import org.koin.dsl.module
 object Koin {
 
     val recordModule: Module = module {
-        viewModel<RecordViewModel> { RecordViewModel() }
+        viewModel<RecordViewModel> {
+            RecordViewModel(
+                savedStateHandle = get(),
+            )
+        }
     }
 
 }

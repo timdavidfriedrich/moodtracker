@@ -9,4 +9,5 @@
     <string name="note_card_title">Notes</string>
     <string name="song_card_day_title">Song of the day</string>
     <string name="todays_mood_graph_card_title">Today\'s mood timeline</string>
+    <string name="moment_record_save_label">save</string>
 </resources>

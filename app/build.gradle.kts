@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -81,5 +82,6 @@ dependencies {
 
     // navigation
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlin.serialization)
     testImplementation(libs.androidx.navigation.testing)
 }

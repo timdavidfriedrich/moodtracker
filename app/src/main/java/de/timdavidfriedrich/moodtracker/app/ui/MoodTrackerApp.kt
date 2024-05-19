@@ -5,6 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import de.timdavidfriedrich.moodtracker.app.di.Koin
+import de.timdavidfriedrich.moodtracker.app.ui.navigation.NavigationHost
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import org.koin.compose.KoinApplication
 
