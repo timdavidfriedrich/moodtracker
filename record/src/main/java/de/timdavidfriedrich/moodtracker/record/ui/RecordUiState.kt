@@ -1,6 +1,6 @@
 package de.timdavidfriedrich.moodtracker.record.ui
 
-import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 
 sealed interface RecordUiState {
     data object Loading : RecordUiState

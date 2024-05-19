@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
-import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import java.time.Instant
 import java.time.ZoneId

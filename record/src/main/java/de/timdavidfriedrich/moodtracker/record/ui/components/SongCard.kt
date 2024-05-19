@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import de.timdavidfriedrich.moodtracker.common.domain.Record
-import de.timdavidfriedrich.moodtracker.common.domain.Song
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
+import de.timdavidfriedrich.moodtracker.common.domain.models.Song
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState

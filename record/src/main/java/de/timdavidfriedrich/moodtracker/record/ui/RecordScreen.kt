@@ -119,7 +119,7 @@ private fun RecordScreenSuccess(
         SongCard(uiState, Modifier, onAction)
         NoteCard(uiState, Modifier, onAction)
         Button(
-            onClick = { onAction(RecordAction.Moment.Save) },
+            onClick = { onAction(RecordAction.SaveRecord) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = stringResource(id = R.string.moment_record_save_label))

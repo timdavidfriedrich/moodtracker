@@ -1,6 +1,6 @@
 package de.timdavidfriedrich.moodtracker.calendar.ui
 
-import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import java.time.YearMonth
 
 sealed interface CalendarUiState {

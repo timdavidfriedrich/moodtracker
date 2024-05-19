@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.common.R
-import de.timdavidfriedrich.moodtracker.common.domain.Emotion
-import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.domain.models.Emotion
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
 import java.time.Instant
@@ -69,20 +69,20 @@ private fun EmotionsCardPreview() {
             record = Record.Day(
                 date = Date.from(Instant.now()),
                 emotions = listOf(
-                    Emotion("☁️", "emotion"),
-                    Emotion("☂️", "misunderstood"),
-                    Emotion("🌪️", "furious"),
-                    Emotion("🎀", "emotion"),
-                    Emotion("🛌", "eepy"),
-                    Emotion("💖", "emotion"),
-                    Emotion("🩹", "emotion"),
-                    Emotion("🕯️", "emotion"),
-                    Emotion("🌼", "emotion"),
-                    Emotion("✨", "emotion"),
-                    Emotion("🪩", "disco"),
-                    Emotion("🐢", "emotion"),
-                    Emotion("🎲", "emotion"),
-                    Emotion("🪁", "levitating"),
+                    Emotion(icon = "☁️", name = "emotion"),
+                    Emotion(icon = "☂️", name = "misunderstood"),
+                    Emotion(icon = "🌪️", name = "furious"),
+                    Emotion(icon = "🎀", name = "emotion"),
+                    Emotion(icon = "🛌", name = "eepy"),
+                    Emotion(icon = "💖", name = "emotion"),
+                    Emotion(icon = "🩹", name = "emotion"),
+                    Emotion(icon = "🕯️", name = "emotion"),
+                    Emotion(icon = "🌼", name = "emotion"),
+                    Emotion(icon = "✨", name = "emotion"),
+                    Emotion(icon = "🪩", name = "disco"),
+                    Emotion(icon = "🐢", name = "emotion"),
+                    Emotion(icon = "🎲", name = "emotion"),
+                    Emotion(icon = "🪁", name = "levitating"),
                 ),
             )
         )

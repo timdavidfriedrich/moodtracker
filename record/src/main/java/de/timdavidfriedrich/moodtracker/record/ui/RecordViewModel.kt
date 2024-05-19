@@ -2,12 +2,22 @@ package de.timdavidfriedrich.moodtracker.record.ui
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
+import de.timdavidfriedrich.moodtracker.common.domain.usecases.GetAllAvailableEmotionsUseCase
 import de.timdavidfriedrich.moodtracker.common.ui.navigation.RecordScreenType
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteDayRecordUseCase
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByIdUseCase
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class RecordViewModel(
+    private val getAllAvailableEmotionsUseCase: GetAllAvailableEmotionsUseCase,
+    private val getDayRecordByIdUseCase: GetDayRecordByIdUseCase,
+    private val saveDayRecordUseCase: SaveDayRecordUseCase,
+    private val deleteDayRecordUseCase: DeleteDayRecordUseCase,
+    private val saveMomentRecordUseCase: SaveDayRecordUseCase,
+    private val deleteMomentRecordUseCase: DeleteDayRecordUseCase,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 

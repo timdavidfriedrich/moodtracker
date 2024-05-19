@@ -5,8 +5,8 @@ import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import de.timdavidfriedrich.moodtracker.common.domain.Mood
-import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.common.domain.models.Mood
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
@@ -23,7 +23,7 @@ fun MoodSliderCard(
         modifier = modifier,
     ) {
         Slider(
-            value = uiState.record.mood.score.toFloat(),
+            value = uiState.record.mood?.score?.toFloat() ?: 0f,
             onValueChange = { onAction(RecordAction.Moment.MoodSliderChange(it)) },
         )
     }

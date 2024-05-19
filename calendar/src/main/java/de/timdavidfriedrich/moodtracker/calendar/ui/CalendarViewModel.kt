@@ -2,7 +2,9 @@ package de.timdavidfriedrich.moodtracker.calendar.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import de.timdavidfriedrich.moodtracker.common.domain.Record
+import de.timdavidfriedrich.moodtracker.calendar.domain.usecases.GetAllDayRecordsUseCase
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
+import de.timdavidfriedrich.moodtracker.common.domain.usecases.GetAllAvailableEmotionsUseCase
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +15,8 @@ import java.time.YearMonth
 import java.util.Locale
 
 class CalendarViewModel(
-
+    private val getAllPossibleEmotionsUseCase: GetAllAvailableEmotionsUseCase,
+    private val getAllDayRecordsUseCase: GetAllDayRecordsUseCase,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow<CalendarUiState>(CalendarUiState.Loading)
