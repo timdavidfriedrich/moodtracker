@@ -1,21 +1,18 @@
 package de.timdavidfriedrich.moodtracker.calendar.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import de.timdavidfriedrich.moodtracker.calendar.domain.usecases.GetAllDayRecordsUseCase
-import de.timdavidfriedrich.moodtracker.common.domain.models.Record
-import de.timdavidfriedrich.moodtracker.common.domain.usecases.GetAllAvailableEmotionsUseCase
-import de.timdavidfriedrich.moodtracker.common.ui.extensions.toYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
-import java.text.SimpleDateFormat
+import kotlinx.coroutines.launch
 import java.time.YearMonth
-import java.util.Locale
 
 class CalendarViewModel(
-    private val getAllPossibleEmotionsUseCase: GetAllAvailableEmotionsUseCase,
     private val getAllDayRecordsUseCase: GetAllDayRecordsUseCase,
 ) : ViewModel() {
 
@@ -44,22 +41,18 @@ class CalendarViewModel(
     }
 
     private fun updateMonthData() {
-        val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val sampleDayRecords = listOf(
-            Record.Day(date = format.parse("2024-02-01")!!),
-            Record.Day(date = format.parse("2023-08-22")!!),
-            Record.Day(date = format.parse("2024-01-01")!!),
-            Record.Day(date = format.parse("2024-05-11")!!),
-            Record.Day(date = format.parse("2024-05-12")!!),
-        )
-
-        _uiState.update { current ->
-            if (current !is CalendarUiState.Success) return@update current
-            current.copy(
-                dayRecords = sampleDayRecords.filter {
-                    it.date.time.toYearMonth() == current.month
+        viewModelScope.launch {
+            getAllDayRecordsUseCase()
+                .onStart { _uiState.value = CalendarUiState.Loading }
+                .catch { _uiState.value = CalendarUiState.Error }
+                .collect { dayRecords ->
+                    if (_uiState.value !is CalendarUiState.Success) {
+                        _uiState.value = CalendarUiState.Success()
+                    }
+                    _uiState.update {
+                        (it as CalendarUiState.Success).copy(dayRecords = dayRecords)
+                    }
                 }
-            )
         }
     }
 
@@ -76,10 +69,6 @@ class CalendarViewModel(
     }
 
     private fun currentMonthEquals(month: YearMonth): Boolean {
-        Log.d(
-            "isCurrentMonthSelected",
-            "$month (selected) == ${YearMonth.now()} (now) = ${month == YearMonth.now()}"
-        )
         return month == YearMonth.now()
     }
 

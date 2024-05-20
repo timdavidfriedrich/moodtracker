@@ -10,12 +10,7 @@ import org.koin.dsl.module
 
 object Koin {
     val calendarModule: Module = module {
-        viewModel<CalendarViewModel> {
-            CalendarViewModel(
-                getAllPossibleEmotionsUseCase = get(),
-                getAllDayRecordsUseCase = get(),
-            )
-        }
+        viewModel<CalendarViewModel> { CalendarViewModel(getAllDayRecordsUseCase = get()) }
         single<CalendarRepository> { CalendarRepositoryImpl(localDataSource = get()) }
 
         // Use cases

@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
-import de.timdavidfriedrich.moodtracker.common.ui.extensions.toMilliseconds
-import de.timdavidfriedrich.moodtracker.common.ui.extensions.toYearMonth
+import de.timdavidfriedrich.moodtracker.calendar.ui.extensions.toMilliseconds
+import de.timdavidfriedrich.moodtracker.calendar.ui.extensions.toYearMonth
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import java.time.YearMonth
 

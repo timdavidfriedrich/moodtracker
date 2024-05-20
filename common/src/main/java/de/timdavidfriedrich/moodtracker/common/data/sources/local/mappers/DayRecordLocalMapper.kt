@@ -1,5 +1,6 @@
 package de.timdavidfriedrich.moodtracker.common.data.sources.local.mappers
 
+import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.DayRecordEntity
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.DayRecordWithMomentRecordsRelation
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 
@@ -19,6 +20,16 @@ object DayRecordLocalMapper : LocalMapper<DayRecordWithMomentRecordsRelation, Re
 
     override fun toEntity(model: Record.Day?): DayRecordWithMomentRecordsRelation? {
         model ?: return null
-        TODO("Not yet implemented")
+        return DayRecordWithMomentRecordsRelation(
+            dayRecord = DayRecordEntity(
+                id = model.id,
+                date = model.date,
+                //emotions = model.emotions,
+                note = model.note,
+                song = SongLocalMapper.toEntity(model.song),
+                moodGraphData = MoodGraphDataLocalMapper.toEntity(model.moodGraphData),
+            ),
+            momentRecords = model.moments.mapNotNull { MomentRecordLocalMapper.toEntity(it) },
+        )
     }
 }

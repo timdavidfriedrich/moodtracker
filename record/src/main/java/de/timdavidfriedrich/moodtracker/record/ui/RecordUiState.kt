@@ -6,6 +6,7 @@ sealed interface RecordUiState {
     data object Loading : RecordUiState
     sealed interface Error : RecordUiState {
         data object RecordTypeIsMissing : Error
+        data object Data : Error
     }
 
     sealed class Success : RecordUiState {

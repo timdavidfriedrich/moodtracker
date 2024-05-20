@@ -10,6 +10,7 @@ import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.SongE
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.DayRecordWithMomentRecordsRelation
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.MomentRecordWithEmotionsRelation
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 class LocalDataSourceImpl(
     private val database: LocalDatabase,
@@ -36,6 +37,13 @@ class LocalDataSourceImpl(
 
     override fun getDayRecordWithMomentRecordsById(id: Long): Flow<DayRecordWithMomentRecordsRelation?> {
         return database.dayRecordDao().getDayRecordWithMomentRecordsById(id)
+    }
+
+    override suspend fun getDayRecordWithMomentRecordsByDateRange(
+        startDate: Date,
+        endDate: Date,
+    ): DayRecordWithMomentRecordsRelation? {
+        return database.dayRecordDao().getDayRecordWithMomentRecordsByDateRange(startDate, endDate)
     }
 
     override suspend fun deleteDayRecord(dayRecord: DayRecordEntity) {

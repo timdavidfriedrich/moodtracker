@@ -2,7 +2,6 @@ package de.timdavidfriedrich.moodtracker.common.di
 
 import android.app.Application
 import androidx.room.Room
-import de.timdavidfriedrich.moodtracker.common.data.repositories.CommonRepositoryImpl
 import de.timdavidfriedrich.moodtracker.common.data.sources.LocalDataSource
 import de.timdavidfriedrich.moodtracker.common.data.sources.LocalDataSourceImpl
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.LocalDatabase
@@ -13,9 +12,6 @@ import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.MomentRec
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.MoodDao
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.MoodGraphDataDao
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.SongDao
-import de.timdavidfriedrich.moodtracker.common.domain.repositories.CommonRepository
-import de.timdavidfriedrich.moodtracker.common.domain.usecases.GetAllAvailableEmotionsUseCase
-import org.koin.core.module.Module
 import org.koin.dsl.module
 
 object Koin {
@@ -34,7 +30,7 @@ object Koin {
     private fun provideMoodGraphDataDao(database: LocalDatabase) = database.moodGraphDataDao()
     private fun provideSongDao(database: LocalDatabase) = database.songDao()
 
-    val localDatabaseModule = module {
+    val commonModule = module {
         single<LocalDatabase> { provideDatabase(application = get()) }
         single<LocalDataSource> { LocalDataSourceImpl(database = get()) }
         single<DayRecordDao> { provideDayRecordDao(database = get()) }
@@ -43,14 +39,5 @@ object Koin {
         single<MoodDao> { provideMoodDao(database = get()) }
         single<MoodGraphDataDao> { provideMoodGraphDataDao(database = get()) }
         single<SongDao> { provideSongDao(database = get()) }
-    }
-
-    val commonModule: Module = module {
-        single<CommonRepository> { CommonRepositoryImpl(localDataSource = get()) }
-
-        // Use cases
-        single<GetAllAvailableEmotionsUseCase> {
-            GetAllAvailableEmotionsUseCase(commonRepository = get())
-        }
     }
 }

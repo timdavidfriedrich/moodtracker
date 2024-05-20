@@ -30,4 +30,21 @@ object MomentRecordLocalMapper : LocalMapper<MomentRecordWithEmotionsRelation, R
             emotions = model.emotions.mapNotNull { EmotionLocalMapper.toEntity(it) },
         )
     }
+
+    fun toEntityWithDayRecordId(
+        model: Record.Moment,
+        dayRecordId: Long?
+    ): MomentRecordWithEmotionsRelation {
+        return MomentRecordWithEmotionsRelation(
+            momentRecord = MomentRecordEntity(
+                id = model.id,
+                date = model.date,
+                note = model.note,
+                song = SongLocalMapper.toEntity(model.song),
+                mood = MoodLocalMapper.toEntity(model.mood),
+                dayRecordId = dayRecordId,
+            ),
+            emotions = model.emotions.mapNotNull { EmotionLocalMapper.toEntity(it) },
+        )
+    }
 }

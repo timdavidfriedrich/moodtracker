@@ -1,4 +1,4 @@
-package de.timdavidfriedrich.moodtracker.common.ui.extensions
+package de.timdavidfriedrich.moodtracker.calendar.ui.extensions
 
 import java.time.LocalDate
 import java.time.YearMonth
@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
-fun YearMonth.toFormattedString(): String {
+internal fun YearMonth.toFormattedString(): String {
     return format(
         DateTimeFormatter.ofPattern(
             "MMMM u",
@@ -16,7 +16,7 @@ fun YearMonth.toFormattedString(): String {
     )
 }
 
-fun YearMonth.toMilliseconds(): Long {
+internal fun YearMonth.toMilliseconds(): Long {
     return Date.from(
         LocalDate.of(year, month, 1)
             .atStartOfDay(ZoneId.systemDefault())
@@ -24,7 +24,7 @@ fun YearMonth.toMilliseconds(): Long {
     ).time
 }
 
-fun Long.toYearMonth(): YearMonth {
+internal fun Long.toYearMonth(): YearMonth {
     val localDate = Date(this).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     return YearMonth.of(localDate.year, localDate.month)
 }

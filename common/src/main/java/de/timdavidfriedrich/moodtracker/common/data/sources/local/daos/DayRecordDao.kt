@@ -10,6 +10,7 @@ import androidx.room.Update
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.DayRecordEntity
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.DayRecordWithMomentRecordsRelation
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface DayRecordDao {
@@ -29,8 +30,17 @@ interface DayRecordDao {
     @Query("SELECT * FROM dayRecords WHERE id = :id")
     fun getDayRecordById(id: Long): Flow<DayRecordEntity?>
 
+    // TODO: Do I need a Transaction here?
     @Query("SELECT * FROM dayRecords WHERE id = :id")
     fun getDayRecordWithMomentRecordsById(id: Long): Flow<DayRecordWithMomentRecordsRelation?>
+
+    // TODO: Do I need a Transaction here?
+    @Transaction
+    @Query("SELECT * FROM dayRecords WHERE date >= :startDate AND date < :endDate")
+    suspend fun getDayRecordWithMomentRecordsByDateRange(
+        startDate: Date,
+        endDate: Date,
+    ): DayRecordWithMomentRecordsRelation?
 
     @Delete
     suspend fun deleteDayRecord(dayRecord: DayRecordEntity)
