@@ -25,13 +25,12 @@ class CalendarViewModel(
 
     fun onAction(action: CalendarAction) {
         when (action) {
-            is CalendarAction.AddRecord -> {}
-            is CalendarAction.EditRecord -> {}
             is CalendarAction.JumpToToday -> jumpToToday()
             is CalendarAction.DismissMonthPicker -> dismissMonthPicker()
             is CalendarAction.OpenMonthPicker -> openMonthPicker()
             is CalendarAction.PickMonth -> pickMonth(action.month)
             is CalendarAction.SwitchCalendarType -> switchCalendarType()
+            else -> Unit
         }
     }
 

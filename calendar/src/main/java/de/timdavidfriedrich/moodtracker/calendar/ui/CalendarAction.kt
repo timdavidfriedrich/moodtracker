@@ -11,4 +11,5 @@ sealed interface CalendarAction {
     data object OpenMonthPicker : CalendarAction
     data class PickMonth(val month: YearMonth) : CalendarAction
     data object SwitchCalendarType : CalendarAction
+    data object SettingsClick : CalendarAction
 }

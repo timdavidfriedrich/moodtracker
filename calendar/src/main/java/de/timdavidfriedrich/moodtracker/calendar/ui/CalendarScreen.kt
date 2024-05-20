@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import de.timdavidfriedrich.moodtracker.calendar.ui.components.CalendarBar
+import de.timdavidfriedrich.moodtracker.calendar.ui.components.CalendarSuccessTopBar
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.DetailedCalendar
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.OverviewCalendar
 import de.timdavidfriedrich.moodtracker.common.R
@@ -30,7 +30,12 @@ fun CalendarScreen(
     val uiState = viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { CalendarTopBar() },
+        topBar = {
+            CalendarTopBar(
+                uiState = uiState.value,
+                onAction = { viewModel.onAction(it) }
+            )
+        },
         floatingActionButton = {
             CalendarFloatingActionButton(
                 onAction = { onAddClick() }
@@ -87,7 +92,6 @@ private fun CalendarScreenSuccess(
     Column(
         modifier = modifier,
     ) {
-        CalendarBar(uiState, modifier, onAction)
         when (uiState.calendarType) {
             is CalendarType.Overview -> OverviewCalendar(
                 uiState = uiState,
@@ -105,12 +109,26 @@ private fun CalendarScreenSuccess(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CalendarTopBar(
+    uiState: CalendarUiState,
     modifier: Modifier = Modifier,
+    onAction: (CalendarAction) -> Unit = {},
 ) {
-    TopAppBar(
-        title = { Text(stringResource(R.string.app_name)) },
-        modifier = modifier,
-    )
+    when (uiState) {
+        is CalendarUiState.Success -> {
+            CalendarSuccessTopBar(
+                uiState = uiState,
+                modifier = modifier,
+                onAction = onAction,
+            )
+        }
+
+        else -> {
+            TopAppBar(
+                title = { Text(stringResource(R.string.app_name)) },
+                modifier = modifier,
+            )
+        }
+    }
 }
 
 @Composable

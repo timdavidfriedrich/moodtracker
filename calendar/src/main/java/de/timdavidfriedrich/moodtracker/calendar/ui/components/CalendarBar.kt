@@ -1,16 +1,14 @@
 package de.timdavidfriedrich.moodtracker.calendar.ui.components
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.ViewAgenda
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,52 +18,43 @@ import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
 import de.timdavidfriedrich.moodtracker.calendar.ui.extensions.toFormattedString
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarBar(
+fun CalendarSuccessTopBar(
     uiState: CalendarUiState.Success,
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {},
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-    ) {
-        TextButton(
-            onClick = { onAction(CalendarAction.OpenMonthPicker) }
-        ) {
-            Text(uiState.month.toFormattedString())
-        }
-        Spacer(Modifier.weight(1f))
-        if (!uiState.isCurrentMonthSelected) {
+    TopAppBar(
+        title = {
+            Text(
+                modifier = Modifier.clickable { onAction(CalendarAction.OpenMonthPicker) },
+                text = uiState.month.toFormattedString(),
+            )
+        },
+        actions = {
             IconButton(
-                onClick = { onAction(CalendarAction.JumpToToday) }
+                onClick = { onAction(CalendarAction.SwitchCalendarType) }
             ) {
-                Icon(
-                    imageVector = Icons.Rounded.CalendarToday,
-                    contentDescription = "Jump to today",
-                )
-            }
-        }
-        IconButton(
-            onClick = { onAction(CalendarAction.SwitchCalendarType) }
-        ) {
-            when (uiState.calendarType) {
-                is CalendarType.Detailed -> {
-                    Icon(
-                        imageVector = Icons.Rounded.ViewAgenda,
-                        contentDescription = "Change calendar type to overview",
-                    )
-                }
+                when (uiState.calendarType) {
+                    is CalendarType.Detailed -> {
+                        Icon(
+                            imageVector = Icons.Rounded.ViewAgenda,
+                            contentDescription = "Change calendar type to overview",
+                        )
+                    }
 
-                is CalendarType.Overview -> {
-                    Icon(
-                        imageVector = Icons.Rounded.GridView,
-                        contentDescription = "Change calendar type to detailed",
-                    )
+                    is CalendarType.Overview -> {
+                        Icon(
+                            imageVector = Icons.Rounded.GridView,
+                            contentDescription = "Change calendar type to detailed",
+                        )
+                    }
                 }
             }
-
-        }
-    }
+        },
+        modifier = modifier,
+    )
     if (uiState.isMonthPickerVisible) {
         CalendarMonthPicker(uiState, modifier, onAction)
     }
@@ -75,6 +64,6 @@ fun CalendarBar(
 @Composable
 private fun CalendarBarPreview() {
     MoodTrackerTheme {
-        CalendarBar(CalendarUiState.Success())
+        CalendarSuccessTopBar(CalendarUiState.Success())
     }
 }
