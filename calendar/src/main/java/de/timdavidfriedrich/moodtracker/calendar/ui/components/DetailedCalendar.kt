@@ -1,12 +1,15 @@
 package de.timdavidfriedrich.moodtracker.calendar.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
+import de.timdavidfriedrich.moodtracker.common.R
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import java.time.Instant
@@ -19,12 +22,11 @@ fun DetailedCalendar(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_default))
         //modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
-        uiState.dayRecords.let {
-            items(it) { dayRecord ->
-                DetailedCalendarRow(dayRecord, onAction)
-            }
+        items(uiState.dayRecords) { dayRecord ->
+            DetailedCalendarRow(dayRecord, onAction)
         }
     }
 }

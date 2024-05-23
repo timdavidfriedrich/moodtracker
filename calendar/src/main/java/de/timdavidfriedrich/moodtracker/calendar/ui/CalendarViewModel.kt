@@ -3,11 +3,11 @@ package de.timdavidfriedrich.moodtracker.calendar.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.timdavidfriedrich.moodtracker.calendar.domain.usecases.GetAllDayRecordsUseCase
+import de.timdavidfriedrich.moodtracker.calendar.ui.extensions.toYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.YearMonth
@@ -42,14 +42,17 @@ class CalendarViewModel(
     private fun updateMonthData() {
         viewModelScope.launch {
             getAllDayRecordsUseCase()
-                .onStart { _uiState.value = CalendarUiState.Loading }
                 .catch { _uiState.value = CalendarUiState.Error }
                 .collect { dayRecords ->
                     if (_uiState.value !is CalendarUiState.Success) {
                         _uiState.value = CalendarUiState.Success()
                     }
-                    _uiState.update {
-                        (it as CalendarUiState.Success).copy(dayRecords = dayRecords)
+                    _uiState.update { currentState ->
+                        (currentState as CalendarUiState.Success).copy(
+                            dayRecords = dayRecords.filter {
+                                it.date.toYearMonth() == currentState.month
+                            }
+                        )
                     }
                 }
         }

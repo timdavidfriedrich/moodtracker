@@ -1,12 +1,6 @@
 package de.timdavidfriedrich.moodtracker.common.domain.models
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.RemoveCircleOutline
-import androidx.compose.material.icons.rounded.SentimentDissatisfied
-import androidx.compose.material.icons.rounded.SentimentNeutral
-import androidx.compose.material.icons.rounded.SentimentSatisfied
-import androidx.compose.material.icons.rounded.SentimentVeryDissatisfied
-import androidx.compose.material.icons.rounded.SentimentVerySatisfied
+import de.timdavidfriedrich.moodtracker.common.R
 
 data class Mood(
     val id: Long? = null,
@@ -43,14 +37,14 @@ data class Mood(
             in POSITIVE_LIMIT..VERY_POSITIVE_LIMIT -> MoodLevel.VeryPositive
             else -> MoodLevel.None
         }
-    val icon
+    val iconId
         get() = when (level) {
-            is MoodLevel.None -> Icons.Rounded.RemoveCircleOutline
-            is MoodLevel.VeryNegative -> Icons.Rounded.SentimentVeryDissatisfied
-            is MoodLevel.Negative -> Icons.Rounded.SentimentDissatisfied
-            is MoodLevel.Neutral -> Icons.Rounded.SentimentNeutral
-            is MoodLevel.Positive -> Icons.Rounded.SentimentSatisfied
-            is MoodLevel.VeryPositive -> Icons.Rounded.SentimentVerySatisfied
+            is MoodLevel.None -> R.drawable.moodie_none
+            is MoodLevel.VeryNegative -> R.drawable.moodie_very_negative
+            is MoodLevel.Negative -> R.drawable.moodie_negative
+            is MoodLevel.Neutral -> R.drawable.moodie_neutral
+            is MoodLevel.Positive -> R.drawable.moodie_positive
+            is MoodLevel.VeryPositive -> R.drawable.moodie_very_positive
         }
 }
 

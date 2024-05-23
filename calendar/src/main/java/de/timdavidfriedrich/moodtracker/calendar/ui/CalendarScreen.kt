@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.CalendarSuccessTopBar
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.DetailedCalendar
@@ -41,10 +42,15 @@ fun CalendarScreen(
                 onAction = { onAddClick() }
             )
         },
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(
+                    start = dimensionResource(R.dimen.padding_medium),
+                    end = dimensionResource(R.dimen.padding_medium),
+                ),
         ) {
             when (val value = uiState.value) {
                 is CalendarUiState.Loading -> CalendarScreenLoading(modifier)
@@ -52,7 +58,6 @@ fun CalendarScreen(
                 is CalendarUiState.Success -> {
                     CalendarScreenSuccess(
                         uiState = value,
-                        modifier = modifier,
                         onAction = { viewModel.onAction(it) }
                     )
                 }

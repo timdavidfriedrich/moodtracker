@@ -28,3 +28,8 @@ internal fun Long.toYearMonth(): YearMonth {
     val localDate = Date(this).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
     return YearMonth.of(localDate.year, localDate.month)
 }
+
+internal fun Date.toYearMonth(): YearMonth {
+    val localDate = toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+    return YearMonth.of(localDate.year, localDate.month)
+}
