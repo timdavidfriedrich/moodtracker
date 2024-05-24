@@ -1,17 +1,27 @@
 package de.timdavidfriedrich.moodtracker.record.ui.components
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.Slider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.common.domain.models.Mood
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
+import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
 import java.time.Instant
 import java.util.Date
+import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun MoodSliderCard(
@@ -22,10 +32,21 @@ fun MoodSliderCard(
     Card(
         modifier = modifier,
     ) {
-        Slider(
-            value = uiState.record.mood?.score?.toFloat() ?: 0f,
-            onValueChange = { onAction(RecordAction.Moment.MoodSliderChange(it)) },
-        )
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(commonR.dimen.padding_medium)),
+        ) {
+            Text(
+                text = stringResource(R.string.mood_slider_card_title),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Spacer(Modifier.height(dimensionResource(commonR.dimen.padding_small)))
+            MoodSlider(
+                uiState = uiState,
+                onAction = onAction,
+            )
+        }
     }
 }
 

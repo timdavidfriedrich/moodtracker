@@ -48,8 +48,8 @@ fun CalendarScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(
-                    start = dimensionResource(R.dimen.padding_medium),
-                    end = dimensionResource(R.dimen.padding_medium),
+                    start = dimensionResource(R.dimen.padding_large),
+                    end = dimensionResource(R.dimen.padding_large),
                 ),
         ) {
             when (val value = uiState.value) {

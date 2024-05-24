@@ -33,8 +33,6 @@ val RubikFamily = FontFamily(
 
 val bodyFontFamily = RubikFamily
 val displayFontFamily = LondrinaSolidFamily
-
-// Default Material 3 typography values
 val baseline = Typography()
 
 val Typography = Typography(

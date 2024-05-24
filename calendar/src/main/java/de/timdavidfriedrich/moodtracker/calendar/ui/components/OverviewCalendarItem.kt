@@ -32,7 +32,7 @@ fun OverviewCalendarItem(
         modifier = modifier.clickable { onAction(CalendarAction.EditRecord(dayRecord)) },
     ) {
         Image(
-            modifier = Modifier.size(dimensionResource(R.dimen.icon_size_default)),
+            modifier = Modifier.size(dimensionResource(R.dimen.icon_size_medium)),
             painter = painterResource(dayRecord.averageMood.iconId),
             contentDescription = dayRecord.averageMood.level.toString(),
         )

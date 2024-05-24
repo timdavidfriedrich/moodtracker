@@ -10,4 +10,9 @@
     <string name="song_card_day_title">Song of the day</string>
     <string name="todays_mood_graph_card_title">Today\'s mood timeline</string>
     <string name="moment_record_save_label">save</string>
+    <string name="mood_slider_card_title">Mood right now</string>
+    <string name="emotions_card_title">Emotions</string>
+    <string name="refresh_song_description">Refresh song</string>
+    <string name="mood_score_description">Mood score: %1$s</string>
+    <string name="add_moment_record_description">Add moment record</string>
 </resources>

@@ -44,7 +44,7 @@ fun DetailedCalendarRow(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                modifier = Modifier.size(dimensionResource(R.dimen.icon_size_default)),
+                modifier = Modifier.size(dimensionResource(R.dimen.icon_size_medium)),
                 painter = painterResource(dayRecord.averageMood.iconId),
                 contentDescription = dayRecord.averageMood.level.toString(),
             )
@@ -57,7 +57,7 @@ fun DetailedCalendarRow(
                 style = MaterialTheme.typography.bodySmall,
             )
         }
-        Spacer(Modifier.width(dimensionResource(R.dimen.padding_default)))
+        Spacer(Modifier.width(dimensionResource(R.dimen.padding_medium)))
         Card(
             modifier = Modifier
                 .weight(1f)

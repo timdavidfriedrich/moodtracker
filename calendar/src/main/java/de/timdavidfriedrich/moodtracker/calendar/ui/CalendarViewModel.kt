@@ -3,7 +3,7 @@ package de.timdavidfriedrich.moodtracker.calendar.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.timdavidfriedrich.moodtracker.calendar.domain.usecases.GetAllDayRecordsUseCase
-import de.timdavidfriedrich.moodtracker.calendar.ui.extensions.toYearMonth
+import de.timdavidfriedrich.moodtracker.common.ui.extensions.toYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

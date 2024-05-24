@@ -22,7 +22,7 @@ fun DetailedCalendar(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_default))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         //modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
         items(uiState.dayRecords) { dayRecord ->

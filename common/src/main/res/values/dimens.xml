@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="grid_column_size_default">48dp</dimen>
-    <dimen name="icon_size_default">48dp</dimen>
+    <dimen name="grid_column_size_medium">48dp</dimen>
+    <dimen name="icon_size_small">32dp</dimen>
+    <dimen name="icon_size_medium">48dp</dimen>
+    <dimen name="padding_none">0dp</dimen>
+    <dimen name="padding_extra_small">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
-    <dimen name="padding_default">16dp</dimen>
-    <dimen name="padding_medium">32dp</dimen>
-    <dimen name="padding_large">48dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">32dp</dimen>
+    <dimen name="padding_extra_large">48dp</dimen>
+    <dimen name="border_radius_extra_small">4dp</dimen>
+    <dimen name="border_radius_small">8dp</dimen>
+    <dimen name="border_radius_medium">16dp</dimen>
+    <dimen name="border_radius_large">24dp</dimen>
+    <dimen name="border_radius_extra_large">32dp</dimen>
 </resources>

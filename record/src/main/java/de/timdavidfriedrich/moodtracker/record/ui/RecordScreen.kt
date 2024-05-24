@@ -28,6 +28,7 @@ import de.timdavidfriedrich.moodtracker.record.ui.components.NoteCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.SongCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.TodaysMoodsCard
 import org.koin.androidx.compose.koinViewModel
+import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun RecordScreen(
@@ -56,8 +57,8 @@ fun RecordScreen(
                     RecordScreenSuccess(
                         uiState = value,
                         modifier = modifier.padding(
-                            start = dimensionResource(R.dimen.padding_default),
-                            end = dimensionResource(R.dimen.padding_default),
+                            start = dimensionResource(commonR.dimen.padding_medium),
+                            end = dimensionResource(commonR.dimen.padding_medium),
                         ),
                         onAction = {
                             when (it) {
@@ -102,7 +103,7 @@ private fun RecordScreenSuccess(
     onAction: (RecordAction) -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_default)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(commonR.dimen.padding_medium)),
         modifier = modifier,
     ) {
         DateCard(uiState)

@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarType
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
-import de.timdavidfriedrich.moodtracker.calendar.ui.extensions.toFormattedString
+import de.timdavidfriedrich.moodtracker.common.ui.extensions.toFormattedString
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
