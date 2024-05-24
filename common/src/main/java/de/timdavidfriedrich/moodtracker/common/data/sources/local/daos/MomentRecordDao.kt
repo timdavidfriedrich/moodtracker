@@ -5,10 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.MomentRecordEntity
-import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.MomentRecordWithEmotionsRelation
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,10 +19,6 @@ interface MomentRecordDao {
 
     @Query("SELECT * FROM momentRecords")
     fun getAllMomentRecords(): Flow<List<MomentRecordEntity>>
-
-    @Transaction
-    @Query("SELECT * FROM momentRecords")
-    fun getAllMomentRecordsWithEmotions(): Flow<List<MomentRecordWithEmotionsRelation>>
 
     @Query("SELECT * FROM momentRecords WHERE id = :id")
     fun getMomentRecordById(id: Long): Flow<MomentRecordEntity?>

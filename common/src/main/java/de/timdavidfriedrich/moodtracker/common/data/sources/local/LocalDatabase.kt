@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.converters.DateConverters
+import de.timdavidfriedrich.moodtracker.common.data.sources.local.converters.EmotionConverters
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.DayRecordDao
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.EmotionDao
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.MomentRecordDao
@@ -26,9 +27,10 @@ import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.SongE
         MoodGraphDataEntity::class,
         SongEntity::class,
     ],
-    version = 1,
+    exportSchema = false,
+    version = 2,
 )
-@TypeConverters(DateConverters::class)
+@TypeConverters(DateConverters::class, EmotionConverters::class)
 abstract class LocalDatabase : RoomDatabase() {
     abstract fun dayRecordDao(): DayRecordDao
     abstract fun emotionDao(): EmotionDao

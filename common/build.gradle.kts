@@ -60,6 +60,9 @@ dependencies {
     // decoration
     implementation(libs.androidx.compose.material.icons.extended)
 
+    // gson
+    implementation(libs.gson)
+
     // koin
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)

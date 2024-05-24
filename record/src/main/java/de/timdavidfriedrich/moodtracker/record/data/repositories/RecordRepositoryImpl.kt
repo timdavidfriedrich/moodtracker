@@ -54,20 +54,20 @@ class RecordRepositoryImpl(
         val dayRecord = getDayRecordByDate(momentRecord.date)
             ?: Record.Day(date = momentRecord.date)
 
-        val momentRecordWithEmotions = MomentRecordLocalMapper
+        val momentRecordWithDayRecordId = MomentRecordLocalMapper
             .toEntityWithDayRecordId(momentRecord, dayRecord.id)
 
-        if (momentRecord.id == null) {
-            localDataSource.insertMomentRecord(momentRecordWithEmotions.momentRecord)
+        if (momentRecordWithDayRecordId.id == null) {
+            localDataSource.insertMomentRecord(momentRecordWithDayRecordId)
         } else {
-            localDataSource.updateMomentRecord(momentRecordWithEmotions.momentRecord)
+            localDataSource.updateMomentRecord(momentRecordWithDayRecordId)
         }
     }
 
     override suspend fun deleteMomentRecord(momentRecord: Record.Moment) {
         val momentRecordEntity = MomentRecordLocalMapper.toEntity(momentRecord)
         momentRecordEntity?.let {
-            localDataSource.deleteMomentRecord(it.momentRecord)
+            localDataSource.deleteMomentRecord(it)
         }
     }
 

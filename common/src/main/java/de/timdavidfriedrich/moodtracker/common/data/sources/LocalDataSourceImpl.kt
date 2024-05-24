@@ -8,7 +8,6 @@ import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.MoodE
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.MoodGraphDataEntity
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.SongEntity
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.DayRecordWithMomentRecordsRelation
-import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.MomentRecordWithEmotionsRelation
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
@@ -88,10 +87,6 @@ class LocalDataSourceImpl(
 
     override fun getAllMomentRecords(): Flow<List<MomentRecordEntity>> {
         return database.momentRecordDao().getAllMomentRecords()
-    }
-
-    override fun getAllMomentRecordsWithEmotions(): Flow<List<MomentRecordWithEmotionsRelation>> {
-        return database.momentRecordDao().getAllMomentRecordsWithEmotions()
     }
 
     override fun getMomentRecordById(id: Long): Flow<MomentRecordEntity?> {

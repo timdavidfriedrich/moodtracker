@@ -14,6 +14,7 @@ import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseC
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveMomentRecordUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -41,10 +42,33 @@ class RecordViewModel(
             RecordScreenType.MOMENT.name -> initMomentRecordScreen()
             else -> showMissingRecordTypeError()
         }
+        initAvailableEmotions()
     }
 
     private fun showMissingRecordTypeError() {
         _uiState.value = RecordUiState.Error.RecordTypeIsMissing
+    }
+
+    private fun initAvailableEmotions() {
+        viewModelScope.launch {
+            getAllAvailableEmotionsUseCase()
+                .catch { _uiState.value = RecordUiState.Error.Data }
+                .collect { emotions ->
+                    _uiState.update { currentState ->
+                        when (currentState) {
+                            is RecordUiState.Success.Day -> {
+                                currentState.copy(availableEmotions = emotions)
+                            }
+
+                            is RecordUiState.Success.Moment -> {
+                                currentState.copy(availableEmotions = emotions)
+                            }
+
+                            else -> currentState
+                        }
+                    }
+                }
+        }
     }
 
     private fun initDayRecordScreen() {
@@ -54,7 +78,9 @@ class RecordViewModel(
                 _uiState.value = RecordUiState.Success.Day(Record.Day())
             }
             _uiState.update {
-                (it as RecordUiState.Success.Day).copy(record = dayRecord ?: Record.Day())
+                (it as RecordUiState.Success.Day).copy(
+                    record = dayRecord ?: Record.Day(),
+                )
             }
         }
     }

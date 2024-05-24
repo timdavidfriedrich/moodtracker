@@ -13,5 +13,5 @@ data class DayRecordWithMomentRecordsRelation(
         entityColumn = "dayRecordId",
         entity = MomentRecordEntity::class,
     )
-    val momentRecords: List<MomentRecordWithEmotionsRelation>,
+    val momentRecords: List<MomentRecordEntity>,
 )

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.converters.DateConverters
+import de.timdavidfriedrich.moodtracker.common.data.sources.local.converters.EmotionConverters
 import java.util.Date
 
 @Entity(tableName = "momentRecords")
@@ -19,4 +20,6 @@ data class MomentRecordEntity(
     @Embedded(prefix = "song")
     val song: SongEntity? = null,
     val note: String? = null,
+    @TypeConverters(EmotionConverters::class)
+    val emotions: List<EmotionEntity>? = null,
 )

@@ -10,6 +10,9 @@ activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 materialIcons = "1.6.7"
 
+# gson
+gson = "2.11.0"
+
 # koin
 koin-bom = "3.5.0"
 
@@ -42,6 +45,9 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 
 # decoration
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIcons" }
+
+# gson
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }

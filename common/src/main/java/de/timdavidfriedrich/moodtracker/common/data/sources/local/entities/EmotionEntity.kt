@@ -9,5 +9,4 @@ data class EmotionEntity(
     val id: Long? = null,
     val icon: String,
     val name: String,
-    val momentRecordId: Long? = null,
 )

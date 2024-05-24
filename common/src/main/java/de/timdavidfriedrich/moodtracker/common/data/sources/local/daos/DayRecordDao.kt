@@ -30,11 +30,10 @@ interface DayRecordDao {
     @Query("SELECT * FROM dayRecords WHERE id = :id")
     fun getDayRecordById(id: Long): Flow<DayRecordEntity?>
 
-    // TODO: Do I need a Transaction here?
+    @Transaction
     @Query("SELECT * FROM dayRecords WHERE id = :id")
     fun getDayRecordWithMomentRecordsById(id: Long): Flow<DayRecordWithMomentRecordsRelation?>
 
-    // TODO: Do I need a Transaction here?
     @Transaction
     @Query("SELECT * FROM dayRecords WHERE date >= :startDate AND date < :endDate")
     suspend fun getDayRecordWithMomentRecordsByDateRange(

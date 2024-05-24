@@ -6,6 +6,7 @@ import de.timdavidfriedrich.moodtracker.common.data.sources.LocalDataSource
 import de.timdavidfriedrich.moodtracker.common.data.sources.LocalDataSourceImpl
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.LocalDatabase
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.converters.DateConverters
+import de.timdavidfriedrich.moodtracker.common.data.sources.local.converters.EmotionConverters
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.DayRecordDao
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.EmotionDao
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.daos.MomentRecordDao
@@ -18,7 +19,9 @@ object Koin {
     private fun provideDatabase(application: Application): LocalDatabase {
         return Room
             .databaseBuilder(application, LocalDatabase::class.java, "local_database")
+            .createFromAsset("database/local_database.db")
             .addTypeConverter(DateConverters())
+            .addTypeConverter(EmotionConverters())
             .fallbackToDestructiveMigration()
             .build()
     }

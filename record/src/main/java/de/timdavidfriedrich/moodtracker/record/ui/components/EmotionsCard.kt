@@ -1,6 +1,6 @@
 package de.timdavidfriedrich.moodtracker.record.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +24,6 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
 import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
-import java.time.Instant
-import java.util.Date
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -49,12 +47,18 @@ fun EmotionsCard(
             )
             Spacer(Modifier.height(dimensionResource(commonR.dimen.padding_small)))
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(dimensionResource(commonR.dimen.grid_column_size_medium)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(commonR.dimen.padding_medium)),
+                columns = GridCells.Adaptive(
+                    dimensionResource(commonR.dimen.grid_column_size_large)
+                ),
+                horizontalArrangement = Arrangement.spacedBy(
+                    dimensionResource(commonR.dimen.padding_small)
+                ),
+                verticalArrangement = Arrangement.spacedBy(
+                    dimensionResource(commonR.dimen.padding_small)
+                ),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                items(uiState.record.emotions, key = { it }) {
+                items(uiState.availableEmotions, key = { it.icon }) {
                     EmotionCardItem(
                         emotion = it,
                         onAction = onAction,
@@ -71,12 +75,21 @@ private fun EmotionCardItem(
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.clickable { onAction(RecordAction.ToggleEmotion(emotion)) },
+    Card(
+        shape = MaterialTheme.shapes.small,
+        onClick = { onAction(RecordAction.ToggleEmotion(emotion)) },
+        modifier = modifier.fillMaxWidth(),
     ) {
-        Text(emotion.icon)
-        Text(emotion.name)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(commonR.dimen.padding_extra_small))
+        ) {
+            Text(emotion.icon, style = MaterialTheme.typography.titleLarge)
+            Spacer(Modifier.height(dimensionResource(commonR.dimen.padding_extra_small)))
+            Text(emotion.name, style = MaterialTheme.typography.bodySmall)
+        }
     }
 }
 
@@ -85,25 +98,23 @@ private fun EmotionCardItem(
 private fun EmotionsCardPreview() {
     EmotionsCard(
         uiState = RecordUiState.Success.Day(
-            record = Record.Day(
-                date = Date.from(Instant.now()),
-                emotions = listOf(
-                    Emotion(icon = "☁️", name = "emotion"),
-                    Emotion(icon = "☂️", name = "misunderstood"),
-                    Emotion(icon = "🌪️", name = "furious"),
-                    Emotion(icon = "🎀", name = "emotion"),
-                    Emotion(icon = "🛌", name = "eepy"),
-                    Emotion(icon = "💖", name = "emotion"),
-                    Emotion(icon = "🩹", name = "emotion"),
-                    Emotion(icon = "🕯️", name = "emotion"),
-                    Emotion(icon = "🌼", name = "emotion"),
-                    Emotion(icon = "✨", name = "emotion"),
-                    Emotion(icon = "🪩", name = "disco"),
-                    Emotion(icon = "🐢", name = "emotion"),
-                    Emotion(icon = "🎲", name = "emotion"),
-                    Emotion(icon = "🪁", name = "levitating"),
-                ),
-            )
+            record = Record.Day(),
+            availableEmotions = listOf(
+                Emotion(icon = "☁️", name = "emotion"),
+                Emotion(icon = "☂️", name = "misunderstood"),
+                Emotion(icon = "🌪️", name = "furious"),
+                Emotion(icon = "🎀", name = "emotion"),
+                Emotion(icon = "🛌", name = "eepy"),
+                Emotion(icon = "💖", name = "emotion"),
+                Emotion(icon = "🩹", name = "emotion"),
+                Emotion(icon = "🕯️", name = "emotion"),
+                Emotion(icon = "🌼", name = "emotion"),
+                Emotion(icon = "✨", name = "emotion"),
+                Emotion(icon = "🪩", name = "disco"),
+                Emotion(icon = "🐢", name = "emotion"),
+                Emotion(icon = "🎲", name = "emotion"),
+                Emotion(icon = "🪁", name = "levitating"),
+            ),
         )
     )
 }

@@ -7,7 +7,6 @@ import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.MoodE
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.MoodGraphDataEntity
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.SongEntity
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.DayRecordWithMomentRecordsRelation
-import de.timdavidfriedrich.moodtracker.common.data.sources.local.relations.MomentRecordWithEmotionsRelation
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
@@ -39,7 +38,6 @@ interface LocalDataSource {
     suspend fun insertMomentRecord(momentRecord: MomentRecordEntity)
     suspend fun updateMomentRecord(momentRecord: MomentRecordEntity)
     fun getAllMomentRecords(): Flow<List<MomentRecordEntity>>
-    fun getAllMomentRecordsWithEmotions(): Flow<List<MomentRecordWithEmotionsRelation>>
     fun getMomentRecordById(id: Long): Flow<MomentRecordEntity?>
     suspend fun deleteMomentRecord(momentRecord: MomentRecordEntity)
     suspend fun deleteMomentRecordById(id: Long)
