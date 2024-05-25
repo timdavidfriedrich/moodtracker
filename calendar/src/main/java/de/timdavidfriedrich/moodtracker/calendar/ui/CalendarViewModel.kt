@@ -40,19 +40,29 @@ class CalendarViewModel(
     }
 
     private fun updateMonthData() {
+        val previousState = _uiState.value
         viewModelScope.launch {
             getAllDayRecordsUseCase()
                 .catch { _uiState.value = CalendarUiState.Error }
                 .collect { dayRecords ->
-                    if (_uiState.value !is CalendarUiState.Success) {
-                        _uiState.value = CalendarUiState.Success()
-                    }
-                    _uiState.update { currentState ->
-                        (currentState as CalendarUiState.Success).copy(
-                            dayRecords = dayRecords.filter {
-                                it.date.toYearMonth() == currentState.month
-                            }
-                        )
+                    when (previousState) {
+                        is CalendarUiState.Success -> {
+                            _uiState.value = previousState.copy(
+                                dayRecords = dayRecords.filter {
+                                    it.date.toYearMonth() == previousState.month
+                                }
+                            )
+                        }
+
+                        else -> {
+                            val todaysMonth = YearMonth.now()
+                            _uiState.value = CalendarUiState.Success(
+                                month = todaysMonth,
+                                dayRecords = dayRecords.filter {
+                                    it.date.toYearMonth() == todaysMonth
+                                },
+                            )
+                        }
                     }
                 }
         }
