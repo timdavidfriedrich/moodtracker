@@ -2,7 +2,7 @@ package de.timdavidfriedrich.moodtracker.app.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +33,7 @@ fun NavigationHost(
         composable<RecordDestination> {
             RecordScreen(
                 onBackClick = {
-                    navController.popBackStackWithFallback(startDestination)
+                    navController.navigateBack()
                 },
                 onAddMomentClick = {
                     navController.navigate(RecordDestination(RecordScreenType.MOMENT.name))
@@ -43,8 +43,9 @@ fun NavigationHost(
     }
 }
 
-private fun NavController.popBackStackWithFallback(startDestination: Any) {
-    if (!popBackStack()) {
-        navigate(startDestination)
-    }
+private val NavHostController.canPopBackStack: Boolean
+    get() = currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
+
+private fun NavHostController.navigateBack() {
+    if (canPopBackStack) popBackStack()
 }
