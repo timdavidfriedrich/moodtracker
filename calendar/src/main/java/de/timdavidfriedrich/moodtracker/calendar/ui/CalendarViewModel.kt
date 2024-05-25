@@ -35,7 +35,6 @@ class CalendarViewModel(
     }
 
     private fun initUiState() {
-        _uiState.value = CalendarUiState.Success()
         updateMonthData()
     }
 
@@ -55,11 +54,11 @@ class CalendarViewModel(
                         }
 
                         else -> {
-                            val todaysMonth = YearMonth.now()
+                            val monthToday = YearMonth.now()
                             _uiState.value = CalendarUiState.Success(
-                                month = todaysMonth,
+                                month = monthToday,
                                 dayRecords = dayRecords.filter {
-                                    it.date.toYearMonth() == todaysMonth
+                                    it.date.toYearMonth() == monthToday
                                 },
                             )
                         }

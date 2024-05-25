@@ -20,6 +20,8 @@ import de.timdavidfriedrich.moodtracker.calendar.ui.components.CalendarSuccessTo
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.DetailedCalendar
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.OverviewCalendar
 import de.timdavidfriedrich.moodtracker.common.R
+import de.timdavidfriedrich.moodtracker.common.ui.components.ErrorElement
+import de.timdavidfriedrich.moodtracker.common.ui.components.LoadingElement
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -70,22 +72,14 @@ fun CalendarScreen(
 private fun CalendarScreenLoading(
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-    ) {
-
-    }
+    LoadingElement(modifier)
 }
 
 @Composable
 private fun CalendarScreenError(
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
-    ) {
-
-    }
+    ErrorElement(modifier)
 }
 
 @Composable

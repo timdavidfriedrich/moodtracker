@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Silly app name</string>
     <string name="today">Today</string>
+    <string name="error_label">Error</string>
 </resources>
