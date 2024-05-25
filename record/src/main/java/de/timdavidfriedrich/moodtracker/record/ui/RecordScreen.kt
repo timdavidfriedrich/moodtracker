@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
@@ -47,28 +48,26 @@ fun RecordScreen(
         },
         modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(innerPadding),
-        ) {
-            when (val value = uiState.value) {
-                is RecordUiState.Loading -> RecordScreenLoading(modifier)
-                is RecordUiState.Error -> RecordScreenError(modifier)
-                is RecordUiState.Success -> {
-                    RecordScreenSuccess(
-                        uiState = value,
-                        modifier = modifier.padding(
+        when (val value = uiState.value) {
+            is RecordUiState.Loading -> RecordScreenLoading(modifier.padding(innerPadding))
+            is RecordUiState.Error -> RecordScreenError(modifier.padding(innerPadding))
+            is RecordUiState.Success -> {
+                RecordScreenSuccess(
+                    uiState = value,
+                    modifier = modifier
+                        .padding(innerPadding)
+                        .padding(
                             start = dimensionResource(commonR.dimen.padding_medium),
                             end = dimensionResource(commonR.dimen.padding_medium),
                         ),
-                        onAction = {
-                            when (it) {
-                                is RecordAction.BackClick -> onBackClick()
-                                is RecordAction.Day.AddMomentRecord -> onAddMomentClick()
-                                else -> viewModel.onAction(it)
-                            }
+                    onAction = {
+                        when (it) {
+                            is RecordAction.BackClick -> onBackClick()
+                            is RecordAction.Day.AddMomentRecord -> onAddMomentClick()
+                            else -> viewModel.onAction(it)
                         }
-                    )
-                }
+                    }
+                )
             }
         }
     }
@@ -102,28 +101,51 @@ private fun RecordScreenSuccess(
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit,
 ) {
-    Column(
+    LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(commonR.dimen.padding_medium)),
         modifier = modifier,
     ) {
-        DateCard(uiState)
-        if (uiState is RecordUiState.Success.Day) {
-            MoodGraphCard(uiState, Modifier, onAction)
+        item {
+            DateCard(uiState)
         }
+
+        if (uiState is RecordUiState.Success.Day) {
+            item {
+                MoodGraphCard(uiState, Modifier, onAction)
+            }
+        }
+
         if (uiState is RecordUiState.Success.Moment) {
-            MoodSliderCard(uiState, Modifier, onAction)
+            item {
+                MoodSliderCard(uiState, Modifier, onAction)
+            }
         }
-        EmotionsCard(uiState, Modifier, onAction)
+
+        item {
+            EmotionsCard(uiState, Modifier, onAction)
+        }
+
         if (uiState is RecordUiState.Success.Day) {
-            TodaysMoodsCard(uiState, Modifier, onAction)
+            item {
+                TodaysMoodsCard(uiState, Modifier, onAction)
+            }
         }
-        SongCard(uiState, Modifier, onAction)
-        NoteCard(uiState, Modifier, onAction)
-        Button(
-            onClick = { onAction(RecordAction.SaveRecord) },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = stringResource(id = R.string.moment_record_save_label))
+
+        item {
+            SongCard(uiState, Modifier, onAction)
+        }
+
+        item {
+            NoteCard(uiState, Modifier, onAction)
+        }
+
+        item {
+            Button(
+                onClick = { onAction(RecordAction.SaveRecord) },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(text = stringResource(id = R.string.moment_record_save_label))
+            }
         }
     }
 }

@@ -3,13 +3,12 @@ package de.timdavidfriedrich.moodtracker.record.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,10 +45,7 @@ fun EmotionsCard(
                 style = MaterialTheme.typography.titleMedium,
             )
             Spacer(Modifier.height(dimensionResource(commonR.dimen.padding_small)))
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(
-                    dimensionResource(commonR.dimen.grid_column_size_large)
-                ),
+            FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(
                     dimensionResource(commonR.dimen.padding_small)
                 ),
@@ -58,7 +54,7 @@ fun EmotionsCard(
                 ),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(uiState.availableEmotions, key = { it.icon }) {
+                uiState.availableEmotions.forEach {
                     EmotionCardItem(
                         emotion = it,
                         onAction = onAction,
@@ -78,7 +74,7 @@ private fun EmotionCardItem(
     Card(
         shape = MaterialTheme.shapes.small,
         onClick = { onAction(RecordAction.ToggleEmotion(emotion)) },
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.width(dimensionResource(commonR.dimen.grid_column_size_large)),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
