@@ -18,14 +18,14 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import java.time.Instant
 import java.util.Date
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun MoodSliderCard(
-    uiState: RecordUiState.Success.Moment,
+    state: RecordState.Success.Moment,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
@@ -43,7 +43,7 @@ fun MoodSliderCard(
             )
             Spacer(Modifier.height(dimensionResource(commonR.dimen.padding_small)))
             MoodSlider(
-                uiState = uiState,
+                state = state,
                 onAction = onAction,
             )
         }
@@ -55,7 +55,7 @@ fun MoodSliderCard(
 private fun MoodSliderCardPreview() {
     MoodTrackerTheme {
         MoodSliderCard(
-            uiState = RecordUiState.Success.Moment(
+            state = RecordState.Success.Moment(
                 record = Record.Moment(
                     date = Date.from(Instant.now()),
                     mood = Mood(

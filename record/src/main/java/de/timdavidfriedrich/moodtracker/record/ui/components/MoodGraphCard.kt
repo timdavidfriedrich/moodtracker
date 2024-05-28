@@ -14,12 +14,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun MoodGraphCard(
-    uiState: RecordUiState.Success.Day,
+    state: RecordState.Success.Day,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {

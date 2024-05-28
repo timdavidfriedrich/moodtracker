@@ -22,13 +22,13 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Emotion
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EmotionsCard(
-    uiState: RecordUiState.Success,
+    state: RecordState.Success,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
@@ -54,7 +54,7 @@ fun EmotionsCard(
                 ),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                uiState.availableEmotions.forEach {
+                state.availableEmotions.forEach {
                     EmotionCardItem(
                         emotion = it,
                         onAction = onAction,
@@ -93,7 +93,7 @@ private fun EmotionCardItem(
 @Composable
 private fun EmotionsCardPreview() {
     EmotionsCard(
-        uiState = RecordUiState.Success.Day(
+        state = RecordState.Success.Day(
             record = Record.Day(),
             availableEmotions = listOf(
                 Emotion(icon = "☁️", name = "emotion"),

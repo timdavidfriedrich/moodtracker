@@ -13,12 +13,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import de.timdavidfriedrich.moodtracker.common.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoodSlider(
-    uiState: RecordUiState.Success.Moment,
+    state: RecordState.Success.Moment,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
@@ -34,7 +34,7 @@ fun MoodSlider(
             ) {
                 Image(
                     painter = painterResource(
-                        id = uiState.record.mood?.iconId ?: R.drawable.moodie_positive
+                        id = state.record.mood?.iconId ?: R.drawable.moodie_positive
                     ),
                     contentDescription = null,
                     modifier = Modifier
@@ -42,7 +42,7 @@ fun MoodSlider(
                 )
             }
         },
-        value = uiState.record.mood?.score?.toFloat() ?: 0f,
+        value = state.record.mood?.score?.toFloat() ?: 0f,
         onValueChange = { onAction(RecordAction.Moment.MoodSliderChange(it)) },
         modifier = modifier,
     )

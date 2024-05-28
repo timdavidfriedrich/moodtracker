@@ -18,6 +18,7 @@ object Koin {
     val recordModule: Module = module {
         viewModel<RecordViewModel> {
             RecordViewModel(
+                recordScreenType = get(),
                 getAllAvailableEmotionsUseCase = get(),
                 getDayRecordByIdUseCase = get(),
                 getDayRecordByDateUseCase = get(),
@@ -25,7 +26,6 @@ object Koin {
                 deleteDayRecordUseCase = get(),
                 saveMomentRecordUseCase = get(),
                 deleteMomentRecordUseCase = get(),
-                savedStateHandle = get(),
             )
         }
         single<RecordRepository> { RecordRepositoryImpl(localDataSource = get()) }

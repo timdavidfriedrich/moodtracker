@@ -3,16 +3,17 @@ package de.timdavidfriedrich.moodtracker.calendar.ui
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import java.time.YearMonth
 
-sealed interface CalendarUiState {
-    data object Loading : CalendarUiState
-    data object Error : CalendarUiState
+sealed interface CalendarState {
+    data object Loading : CalendarState
+    data object Error : CalendarState
     data class Success(
         val isMonthPickerVisible: Boolean = false,
         val calendarType: CalendarType = CalendarType.Overview,
         val month: YearMonth = YearMonth.now(),
         val isCurrentMonthSelected: Boolean = true,
         val dayRecords: List<Record.Day> = listOf(),
-    ) : CalendarUiState
+        val clickedOnAddRecord: Boolean = false,
+    ) : CalendarState
 }
 
 sealed interface CalendarType {

@@ -1,6 +1,5 @@
 package de.timdavidfriedrich.moodtracker.record.ui
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.timdavidfriedrich.moodtracker.common.domain.models.Mood
@@ -13,7 +12,6 @@ import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByIdU
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveMomentRecordUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,6 +19,7 @@ import java.time.Instant
 import java.util.Date
 
 class RecordViewModel(
+    recordScreenType: RecordScreenType,
     private val getAllAvailableEmotionsUseCase: GetAllAvailableEmotionsUseCase,
     private val getDayRecordByIdUseCase: GetDayRecordByIdUseCase,
     private val getDayRecordByDateUseCase: GetDayRecordByDateUseCase,
@@ -28,39 +27,36 @@ class RecordViewModel(
     private val deleteDayRecordUseCase: DeleteDayRecordUseCase,
     private val saveMomentRecordUseCase: SaveMomentRecordUseCase,
     private val deleteMomentRecordUseCase: DeleteDayRecordUseCase,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow<RecordUiState>(RecordUiState.Loading)
-    val uiState = _uiState.asStateFlow()
-
-    private val recordScreenType: String? = savedStateHandle["recordType"]
+    var state = MutableStateFlow<RecordState>(RecordState.Loading)
+        private set
 
     init {
         when (recordScreenType) {
-            RecordScreenType.DAY.name -> initDayRecordScreen()
-            RecordScreenType.MOMENT.name -> initMomentRecordScreen()
+            RecordScreenType.DAY -> initDayRecordScreen()
+            RecordScreenType.MOMENT -> initMomentRecordScreen()
             else -> showMissingRecordTypeError()
         }
         initAvailableEmotions()
     }
 
     private fun showMissingRecordTypeError() {
-        _uiState.value = RecordUiState.Error.RecordTypeIsMissing
+        state.value = RecordState.Error.RecordTypeIsMissing
     }
 
     private fun initAvailableEmotions() {
         viewModelScope.launch {
             getAllAvailableEmotionsUseCase()
-                .catch { _uiState.value = RecordUiState.Error.Data }
+                .catch { state.value = RecordState.Error.Data }
                 .collect { emotions ->
-                    _uiState.update { currentState ->
+                    state.update { currentState ->
                         when (currentState) {
-                            is RecordUiState.Success.Day -> {
+                            is RecordState.Success.Day -> {
                                 currentState.copy(availableEmotions = emotions)
                             }
 
-                            is RecordUiState.Success.Moment -> {
+                            is RecordState.Success.Moment -> {
                                 currentState.copy(availableEmotions = emotions)
                             }
 
@@ -74,11 +70,11 @@ class RecordViewModel(
     private fun initDayRecordScreen() {
         viewModelScope.launch {
             val dayRecord = getDayRecordByDateUseCase(Date.from(Instant.now()))
-            if (_uiState.value !is RecordUiState.Success) {
-                _uiState.value = RecordUiState.Success.Day(Record.Day())
+            if (state.value !is RecordState.Success) {
+                state.value = RecordState.Success.Day(Record.Day())
             }
-            _uiState.update {
-                (it as RecordUiState.Success.Day).copy(
+            state.update {
+                (it as RecordState.Success.Day).copy(
                     record = dayRecord ?: Record.Day(),
                 )
             }
@@ -86,7 +82,7 @@ class RecordViewModel(
     }
 
     private fun initMomentRecordScreen() {
-        _uiState.value = RecordUiState.Success.Moment(
+        state.value = RecordState.Success.Moment(
             record = Record.Moment(),
         )
     }
@@ -96,14 +92,35 @@ class RecordViewModel(
             is RecordAction.Moment.MoodSliderChange -> updateMoodSlider(action.score)
             is RecordAction.NoteChange -> updateNote(action.note)
             is RecordAction.SaveRecord -> saveCurrentRecord()
+            is RecordAction.BackClick -> navigateBack()
+            is RecordAction.Day.AddMomentRecord -> navigateToMomentRecord()
             else -> {}
         }
     }
 
-    private fun updateMoodSlider(score: Float) {
-        _uiState.update {
+    private fun navigateBack() {
+        state.update {
             when (it) {
-                is RecordUiState.Success.Moment -> {
+                is RecordState.Success.Day -> it.copy(clickedBack = true)
+                is RecordState.Success.Moment -> it.copy(clickedBack = true)
+                else -> it
+            }
+        }
+    }
+
+    private fun navigateToMomentRecord() {
+        state.update {
+            when (it) {
+                is RecordState.Success.Day -> it.copy(clickedOnAddMoment = true)
+                else -> it
+            }
+        }
+    }
+
+    private fun updateMoodSlider(score: Float) {
+        state.update {
+            when (it) {
+                is RecordState.Success.Moment -> {
                     val updatedRecord = it.record.copy(
                         mood = it.record.mood
                             ?.copy(score = score.toDouble())
@@ -118,14 +135,14 @@ class RecordViewModel(
     }
 
     private fun updateNote(note: String) {
-        _uiState.update {
+        state.update {
             when (it) {
-                is RecordUiState.Success.Day -> {
+                is RecordState.Success.Day -> {
                     val updatedRecord = it.record.copy(note = note)
                     it.copy(record = updatedRecord)
                 }
 
-                is RecordUiState.Success.Moment -> {
+                is RecordState.Success.Moment -> {
                     val updatedRecord = it.record.copy(note = note)
                     it.copy(record = updatedRecord)
                 }
@@ -136,12 +153,13 @@ class RecordViewModel(
     }
 
     private fun saveCurrentRecord() {
-        if (uiState.value !is RecordUiState.Success) return
+        if (state.value !is RecordState.Success) return
         viewModelScope.launch {
-            when (val record = (uiState.value as RecordUiState.Success).record) {
+            when (val record = (state.value as RecordState.Success).record) {
                 is Record.Day -> saveDayRecordUseCase(record)
                 is Record.Moment -> saveMomentRecordUseCase(record)
             }
         }
+        navigateBack()
     }
 }
