@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -22,26 +21,23 @@ import de.timdavidfriedrich.moodtracker.calendar.ui.components.OverviewCalendar
 import de.timdavidfriedrich.moodtracker.common.R
 import de.timdavidfriedrich.moodtracker.common.ui.components.ErrorElement
 import de.timdavidfriedrich.moodtracker.common.ui.components.LoadingElement
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CalendarScreen(
+    onAction: (CalendarAction) -> Unit,
+    state: CalendarState,
     modifier: Modifier = Modifier,
-    viewModel: CalendarViewModel = koinViewModel<CalendarViewModel>(),
-    onAddClick: () -> Unit,
 ) {
-    val uiState = viewModel.uiState.collectAsState()
-
     Scaffold(
         topBar = {
             CalendarTopBar(
-                uiState = uiState.value,
-                onAction = { viewModel.onAction(it) }
+                state = state,
+                onAction = { onAction(it) }
             )
         },
         floatingActionButton = {
             CalendarFloatingActionButton(
-                onAction = { onAddClick() }
+                onAction = { onAction(it) }
             )
         },
         modifier = modifier.fillMaxSize()
@@ -54,13 +50,13 @@ fun CalendarScreen(
                     end = dimensionResource(R.dimen.padding_large),
                 ),
         ) {
-            when (val value = uiState.value) {
-                is CalendarUiState.Loading -> CalendarScreenLoading(modifier)
-                is CalendarUiState.Error -> CalendarScreenError(modifier)
-                is CalendarUiState.Success -> {
+            when (state) {
+                is CalendarState.Loading -> CalendarScreenLoading(modifier)
+                is CalendarState.Error -> CalendarScreenError(modifier)
+                is CalendarState.Success -> {
                     CalendarScreenSuccess(
-                        uiState = value,
-                        onAction = { viewModel.onAction(it) }
+                        state = state,
+                        onAction = { onAction(it) }
                     )
                 }
             }
@@ -84,21 +80,21 @@ private fun CalendarScreenError(
 
 @Composable
 private fun CalendarScreenSuccess(
-    uiState: CalendarUiState.Success,
+    state: CalendarState.Success,
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {}
 ) {
     Column(
         modifier = modifier,
     ) {
-        when (uiState.calendarType) {
+        when (state.calendarType) {
             is CalendarType.Overview -> OverviewCalendar(
-                uiState = uiState,
+                state = state,
                 onAction = onAction,
             )
 
             is CalendarType.Detailed -> DetailedCalendar(
-                uiState = uiState,
+                state = state,
                 onAction = onAction,
             )
         }
@@ -108,14 +104,14 @@ private fun CalendarScreenSuccess(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CalendarTopBar(
-    uiState: CalendarUiState,
+    state: CalendarState,
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {},
 ) {
-    when (uiState) {
-        is CalendarUiState.Success -> {
+    when (state) {
+        is CalendarState.Success -> {
             CalendarSuccessTopBar(
-                uiState = uiState,
+                state = state,
                 modifier = modifier,
                 onAction = onAction,
             )

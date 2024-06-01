@@ -13,15 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
+import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarState
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarType
-import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toFormattedString
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarSuccessTopBar(
-    uiState: CalendarUiState.Success,
+    state: CalendarState.Success,
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {},
 ) {
@@ -29,14 +29,14 @@ fun CalendarSuccessTopBar(
         title = {
             Text(
                 modifier = Modifier.clickable { onAction(CalendarAction.OpenMonthPicker) },
-                text = uiState.month.toFormattedString(),
+                text = state.month.toFormattedString(),
             )
         },
         actions = {
             IconButton(
                 onClick = { onAction(CalendarAction.SwitchCalendarType) }
             ) {
-                when (uiState.calendarType) {
+                when (state.calendarType) {
                     is CalendarType.Detailed -> {
                         Icon(
                             imageVector = Icons.Rounded.ViewAgenda,
@@ -55,8 +55,8 @@ fun CalendarSuccessTopBar(
         },
         modifier = modifier,
     )
-    if (uiState.isMonthPickerVisible) {
-        CalendarMonthPicker(uiState, modifier, onAction)
+    if (state.isMonthPickerVisible) {
+        CalendarMonthPicker(state, modifier, onAction)
     }
 }
 
@@ -64,6 +64,6 @@ fun CalendarSuccessTopBar(
 @Composable
 private fun CalendarBarPreview() {
     MoodTrackerTheme {
-        CalendarSuccessTopBar(CalendarUiState.Success())
+        CalendarSuccessTopBar(CalendarState.Success())
     }
 }

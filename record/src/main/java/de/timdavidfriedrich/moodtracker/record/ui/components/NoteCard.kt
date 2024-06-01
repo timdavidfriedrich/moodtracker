@@ -20,14 +20,14 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import java.time.Instant
 import java.util.Date
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun NoteCard(
-    uiState: RecordUiState.Success,
+    state: RecordState.Success,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
@@ -53,7 +53,7 @@ fun NoteCard(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                 ),
-                value = uiState.record.note ?: "",
+                value = state.record.note ?: "",
                 onValueChange = { onAction(RecordAction.NoteChange(it)) },
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -66,7 +66,7 @@ fun NoteCard(
 private fun NoteCardPreview() {
     MoodTrackerTheme {
         NoteCard(
-            uiState = RecordUiState.Success.Day(
+            state = RecordState.Success.Day(
                 record = Record.Day(
                     date = Date.from(Instant.now()),
                     note = "Test note 123, yooyoyo",

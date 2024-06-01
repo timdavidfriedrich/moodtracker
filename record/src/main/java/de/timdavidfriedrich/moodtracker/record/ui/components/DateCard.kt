@@ -21,18 +21,18 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toFormattedDayString
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toFormattedDayStringWithTime
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import java.time.Instant
 import java.util.Date
 
 @Composable
 fun DateCard(
-    uiState: RecordUiState.Success,
+    state: RecordState.Success,
     modifier: Modifier = Modifier,
 ) {
-    val formattedDate = when (uiState) {
-        is RecordUiState.Success.Day -> uiState.record.date.toFormattedDayString()
-        is RecordUiState.Success.Moment -> uiState.record.date.toFormattedDayStringWithTime()
+    val formattedDate = when (state) {
+        is RecordState.Success.Day -> state.record.date.toFormattedDayString()
+        is RecordState.Success.Moment -> state.record.date.toFormattedDayStringWithTime()
     }
     Card(
         colors = CardDefaults.cardColors().copy(
@@ -57,7 +57,7 @@ fun DateCard(
 private fun DateCardPreview() {
     MoodTrackerTheme {
         DateCard(
-            uiState = RecordUiState.Success.Day(
+            state = RecordState.Success.Day(
                 record = Record.Day(
                     date = Date.from(Instant.now()),
                 )

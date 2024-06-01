@@ -26,16 +26,16 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.domain.models.Song
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun SongCard(
-    uiState: RecordUiState.Success,
+    state: RecordState.Success,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
-    val song = uiState.record.song
+    val song = state.record.song
 
     Card(
         modifier = modifier,
@@ -105,7 +105,7 @@ fun SongCard(
 @Composable
 private fun SongCardPreview() {
     SongCard(
-        uiState = RecordUiState.Success.Day(
+        state = RecordState.Success.Day(
             record = Record.Day(
                 date = java.util.Date(),
                 song = Song(

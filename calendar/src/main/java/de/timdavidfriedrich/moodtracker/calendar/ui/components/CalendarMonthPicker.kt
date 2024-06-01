@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
-import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
+import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarState
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toMilliseconds
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toYearMonth
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
@@ -20,13 +20,13 @@ import java.time.YearMonth
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarMonthPicker(
-    uiState: CalendarUiState.Success,
+    state: CalendarState.Success,
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {},
 ) {
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = uiState.month.toMilliseconds(),
-        initialDisplayedMonthMillis = uiState.month.toMilliseconds(),
+        initialSelectedDateMillis = state.month.toMilliseconds(),
+        initialDisplayedMonthMillis = state.month.toMilliseconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= System.currentTimeMillis()
@@ -57,6 +57,6 @@ fun CalendarMonthPicker(
 @Composable
 private fun CalendarMonthPickerPreview() {
     MoodTrackerTheme {
-        CalendarMonthPicker(CalendarUiState.Success())
+        CalendarMonthPicker(CalendarState.Success())
     }
 }

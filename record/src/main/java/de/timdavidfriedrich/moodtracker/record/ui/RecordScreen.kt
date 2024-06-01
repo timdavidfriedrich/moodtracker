@@ -16,7 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -28,45 +27,35 @@ import de.timdavidfriedrich.moodtracker.record.ui.components.MoodSliderCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.NoteCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.SongCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.TodaysMoodsCard
-import org.koin.androidx.compose.koinViewModel
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun RecordScreen(
+    onAction: (RecordAction) -> Unit,
+    state: RecordState,
     modifier: Modifier = Modifier,
-    viewModel: RecordViewModel = koinViewModel<RecordViewModel>(),
-    onBackClick: () -> Unit = {},
-    onAddMomentClick: () -> Unit = {},
 ) {
-    val uiState = viewModel.uiState.collectAsState()
-
     Scaffold(
         topBar = {
             RecordTopBar(
-                onAction = { onBackClick() }
+                onAction = { onAction(it) }
             )
         },
         modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
-        when (val value = uiState.value) {
-            is RecordUiState.Loading -> RecordScreenLoading(modifier.padding(innerPadding))
-            is RecordUiState.Error -> RecordScreenError(modifier.padding(innerPadding))
-            is RecordUiState.Success -> {
+        when (state) {
+            is RecordState.Loading -> RecordScreenLoading(modifier.padding(innerPadding))
+            is RecordState.Error -> RecordScreenError(modifier.padding(innerPadding))
+            is RecordState.Success -> {
                 RecordScreenSuccess(
-                    uiState = value,
+                    state = state,
                     modifier = modifier
                         .padding(innerPadding)
                         .padding(
                             start = dimensionResource(commonR.dimen.padding_medium),
                             end = dimensionResource(commonR.dimen.padding_medium),
                         ),
-                    onAction = {
-                        when (it) {
-                            is RecordAction.BackClick -> onBackClick()
-                            is RecordAction.Day.AddMomentRecord -> onAddMomentClick()
-                            else -> viewModel.onAction(it)
-                        }
-                    }
+                    onAction = { onAction(it) }
                 )
             }
         }
@@ -97,7 +86,7 @@ private fun RecordScreenError(
 
 @Composable
 private fun RecordScreenSuccess(
-    uiState: RecordUiState.Success,
+    state: RecordState.Success,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit,
 ) {
@@ -106,37 +95,37 @@ private fun RecordScreenSuccess(
         modifier = modifier,
     ) {
         item {
-            DateCard(uiState)
+            DateCard(state)
         }
 
-        if (uiState is RecordUiState.Success.Day) {
+        if (state is RecordState.Success.Day) {
             item {
-                MoodGraphCard(uiState, Modifier, onAction)
+                MoodGraphCard(state, Modifier, onAction)
             }
         }
 
-        if (uiState is RecordUiState.Success.Moment) {
+        if (state is RecordState.Success.Moment) {
             item {
-                MoodSliderCard(uiState, Modifier, onAction)
-            }
-        }
-
-        item {
-            EmotionsCard(uiState, Modifier, onAction)
-        }
-
-        if (uiState is RecordUiState.Success.Day) {
-            item {
-                TodaysMoodsCard(uiState, Modifier, onAction)
+                MoodSliderCard(state, Modifier, onAction)
             }
         }
 
         item {
-            SongCard(uiState, Modifier, onAction)
+            EmotionsCard(state, Modifier, onAction)
+        }
+
+        if (state is RecordState.Success.Day) {
+            item {
+                TodaysMoodsCard(state, Modifier, onAction)
+            }
         }
 
         item {
-            NoteCard(uiState, Modifier, onAction)
+            SongCard(state, Modifier, onAction)
+        }
+
+        item {
+            NoteCard(state, Modifier, onAction)
         }
 
         item {

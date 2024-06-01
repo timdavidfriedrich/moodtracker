@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import de.timdavidfriedrich.moodtracker.calendar.domain.usecases.GetAllDayRecordsUseCase
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,11 +14,11 @@ class CalendarViewModel(
     private val getAllDayRecordsUseCase: GetAllDayRecordsUseCase,
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow<CalendarUiState>(CalendarUiState.Loading)
-    val uiState: StateFlow<CalendarUiState> = _uiState.asStateFlow()
+    var state = MutableStateFlow<CalendarState>(CalendarState.Loading)
+        private set
 
     init {
-        initUiState()
+        initState()
     }
 
     fun onAction(action: CalendarAction) {
@@ -30,23 +28,31 @@ class CalendarViewModel(
             is CalendarAction.OpenMonthPicker -> openMonthPicker()
             is CalendarAction.PickMonth -> pickMonth(action.month)
             is CalendarAction.SwitchCalendarType -> switchCalendarType()
+            is CalendarAction.AddRecord -> navigateToRecord()
             else -> Unit
         }
     }
 
-    private fun initUiState() {
+    private fun initState() {
         updateMonthData()
     }
 
+    private fun navigateToRecord() {
+        state.update {
+            if (it !is CalendarState.Success) return@update it
+            it.copy(clickedOnAddRecord = true)
+        }
+    }
+
     private fun updateMonthData() {
-        val previousState = _uiState.value
+        val previousState = state.value
         viewModelScope.launch {
             getAllDayRecordsUseCase()
-                .catch { _uiState.value = CalendarUiState.Error }
+                .catch { state.value = CalendarState.Error }
                 .collect { dayRecords ->
                     when (previousState) {
-                        is CalendarUiState.Success -> {
-                            _uiState.value = previousState.copy(
+                        is CalendarState.Success -> {
+                            state.value = previousState.copy(
                                 dayRecords = dayRecords.filter {
                                     it.date.toYearMonth() == previousState.month
                                 }
@@ -55,7 +61,7 @@ class CalendarViewModel(
 
                         else -> {
                             val monthToday = YearMonth.now()
-                            _uiState.value = CalendarUiState.Success(
+                            state.value = CalendarState.Success(
                                 month = monthToday,
                                 dayRecords = dayRecords.filter {
                                     it.date.toYearMonth() == monthToday
@@ -68,9 +74,9 @@ class CalendarViewModel(
     }
 
     private fun jumpToToday() {
-        _uiState.update {
+        state.update {
             val currentMonth = YearMonth.now()
-            if (it !is CalendarUiState.Success) return@update it
+            if (it !is CalendarState.Success) return@update it
             it.copy(
                 month = currentMonth,
                 isCurrentMonthSelected = currentMonthEquals(currentMonth),
@@ -84,15 +90,15 @@ class CalendarViewModel(
     }
 
     private fun openMonthPicker() {
-        _uiState.update {
-            if (it !is CalendarUiState.Success) return@update it
+        state.update {
+            if (it !is CalendarState.Success) return@update it
             it.copy(isMonthPickerVisible = true)
         }
     }
 
     private fun hideMonthPicker() {
-        _uiState.update {
-            if (it !is CalendarUiState.Success) return@update it
+        state.update {
+            if (it !is CalendarState.Success) return@update it
             it.copy(isMonthPickerVisible = false)
         }
     }
@@ -103,8 +109,8 @@ class CalendarViewModel(
 
     private fun pickMonth(month: YearMonth) {
         hideMonthPicker()
-        _uiState.update {
-            if (it !is CalendarUiState.Success) return@update it
+        state.update {
+            if (it !is CalendarState.Success) return@update it
             it.copy(
                 month = month,
                 isCurrentMonthSelected = currentMonthEquals(month),
@@ -114,8 +120,8 @@ class CalendarViewModel(
     }
 
     private fun switchCalendarType() {
-        _uiState.update {
-            if (it !is CalendarUiState.Success) return@update it
+        state.update {
+            if (it !is CalendarState.Success) return@update it
             it.copy(
                 calendarType = when (it.calendarType) {
                     is CalendarType.Overview -> CalendarType.Detailed

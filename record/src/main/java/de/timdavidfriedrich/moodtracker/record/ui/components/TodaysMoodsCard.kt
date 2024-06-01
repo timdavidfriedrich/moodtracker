@@ -28,14 +28,14 @@ import de.timdavidfriedrich.moodtracker.common.ui.extensions.toFormattedDayStrin
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.RecordAction
-import de.timdavidfriedrich.moodtracker.record.ui.RecordUiState
+import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import java.time.Instant
 import java.util.Date
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
 fun TodaysMoodsCard(
-    uiState: RecordUiState.Success.Day,
+    state: RecordState.Success.Day,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
@@ -72,7 +72,7 @@ fun TodaysMoodsCard(
                 }
             }
             Column {
-                uiState.record.moments.forEach { moment ->
+                state.record.moments.forEach { moment ->
                     TodaysMoodsCardItem(moment, modifier, onAction)
                 }
             }
@@ -116,7 +116,7 @@ private fun TodaysMoodsCardItem(
 private fun TodaysMoodsCardPreview() {
     MoodTrackerTheme {
         TodaysMoodsCard(
-            uiState = RecordUiState.Success.Day(
+            state = RecordState.Success.Day(
                 record = Record.Day(
                     date = Date.from(Instant.now()),
                     moments = listOf(

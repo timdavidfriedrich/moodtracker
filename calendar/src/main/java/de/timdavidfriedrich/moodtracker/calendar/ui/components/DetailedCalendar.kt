@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarAction
-import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarUiState
+import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarState
 import de.timdavidfriedrich.moodtracker.common.R
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
@@ -17,7 +17,7 @@ import java.util.Date
 
 @Composable
 fun DetailedCalendar(
-    uiState: CalendarUiState.Success,
+    state: CalendarState.Success,
     onAction: (CalendarAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -25,7 +25,7 @@ fun DetailedCalendar(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
         //modifier = modifier.verticalScroll(rememberScrollState()),
     ) {
-        items(uiState.dayRecords) { dayRecord ->
+        items(state.dayRecords) { dayRecord ->
             DetailedCalendarRow(dayRecord, onAction)
         }
     }
@@ -36,7 +36,7 @@ fun DetailedCalendar(
 private fun DetailedCalendarPreview() {
     MoodTrackerTheme {
         DetailedCalendar(
-            uiState = CalendarUiState.Success(
+            state = CalendarState.Success(
                 dayRecords = listOf(
                     Record.Day(
                         date = Date.from(Instant.now()),
