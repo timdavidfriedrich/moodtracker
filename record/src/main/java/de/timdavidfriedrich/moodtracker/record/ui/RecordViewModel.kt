@@ -79,15 +79,17 @@ class RecordViewModel(
     private fun initDayRecordScreen(recordTimestamp: Long? = null) {
         viewModelScope.launch {
             val date = recordTimestamp?.let { Date(it) }
-            val dayRecord = getOrCreateDayRecordByDateUseCase(date)
+            getOrCreateDayRecordByDateUseCase(date)
                 .catch { state.update { RecordState.Error.Data } }
-                .stateIn(viewModelScope).value
-            state.update { current ->
-                when (current) {
-                    is RecordState.Success.Day -> current.copy(record = dayRecord)
-                    else -> RecordState.Success.Day(dayRecord)
+                .stateIn(viewModelScope)
+                .collect { dayRecord ->
+                    state.update { current ->
+                        when (current) {
+                            is RecordState.Success.Day -> current.copy(record = dayRecord)
+                            else -> RecordState.Success.Day(dayRecord)
+                        }
+                    }
                 }
-            }
         }
     }
 
