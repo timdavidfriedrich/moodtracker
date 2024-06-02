@@ -5,17 +5,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
-import de.timdavidfriedrich.moodtracker.calendar.ui.components.CalendarSuccessTopBar
+import de.timdavidfriedrich.moodtracker.calendar.ui.components.CalendarTopBar
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.DetailedCalendar
 import de.timdavidfriedrich.moodtracker.calendar.ui.components.OverviewCalendar
 import de.timdavidfriedrich.moodtracker.common.R
@@ -30,10 +26,12 @@ fun CalendarScreen(
 ) {
     Scaffold(
         topBar = {
-            CalendarTopBar(
-                state = state,
-                onAction = { onAction(it) }
-            )
+            if (state is CalendarState.Success) {
+                CalendarTopBar(
+                    state = state,
+                    onAction = { onAction(it) }
+                )
+            }
         },
         floatingActionButton = {
             CalendarFloatingActionButton(
@@ -80,31 +78,6 @@ private fun CalendarScreenSuccess(
             is CalendarType.Detailed -> DetailedCalendar(
                 state = state,
                 onAction = onAction,
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun CalendarTopBar(
-    state: CalendarState,
-    modifier: Modifier = Modifier,
-    onAction: (CalendarAction) -> Unit = {},
-) {
-    when (state) {
-        is CalendarState.Success -> {
-            CalendarSuccessTopBar(
-                state = state,
-                modifier = modifier,
-                onAction = onAction,
-            )
-        }
-
-        else -> {
-            TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
-                modifier = modifier,
             )
         }
     }

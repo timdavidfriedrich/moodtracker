@@ -18,8 +18,16 @@ class CalendarViewModel(
     var state = MutableStateFlow<CalendarState>(CalendarState.Loading)
         private set
 
+    fun loadPreviousState(previousState: CalendarState) {
+        state.update { previousState }
+    }
+
     init {
         initState()
+    }
+
+    private fun initState() {
+        updateMonthData()
     }
 
     fun onAction(action: CalendarAction) {
@@ -35,37 +43,42 @@ class CalendarViewModel(
         }
     }
 
-    private fun initState() {
-        updateMonthData()
-    }
-
     private fun navigateToRecord(record: Record? = null) {
-        state.value = CalendarState.Navigating(ToRecord(record))
+        state.update { current ->
+            CalendarState.Navigating(
+                navigationAction = ToRecord(record),
+                previousState = current,
+            )
+        }
     }
 
     private fun updateMonthData() {
         val previousState = state.value
         viewModelScope.launch {
             getAllDayRecordsUseCase()
-                .catch { state.value = CalendarState.Error }
+                .catch { state.update { CalendarState.Error } }
                 .collect { dayRecords ->
                     when (previousState) {
                         is CalendarState.Success -> {
-                            state.value = previousState.copy(
-                                dayRecords = dayRecords.filter {
-                                    it.date.toYearMonth() == previousState.month
-                                }
-                            )
+                            state.update {
+                                previousState.copy(
+                                    dayRecords = dayRecords.filter {
+                                        it.date.toYearMonth() == previousState.month
+                                    }
+                                )
+                            }
                         }
 
                         else -> {
                             val monthToday = YearMonth.now()
-                            state.value = CalendarState.Success(
-                                month = monthToday,
-                                dayRecords = dayRecords.filter {
-                                    it.date.toYearMonth() == monthToday
-                                },
-                            )
+                            state.update {
+                                CalendarState.Success(
+                                    month = monthToday,
+                                    dayRecords = dayRecords.filter {
+                                        it.date.toYearMonth() == monthToday
+                                    },
+                                )
+                            }
                         }
                     }
                 }

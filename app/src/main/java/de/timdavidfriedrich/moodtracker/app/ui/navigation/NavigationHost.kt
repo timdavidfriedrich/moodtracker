@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import de.timdavidfriedrich.moodtracker.app.ui.navigation.extensions.afterNavigationHasFinished
+import de.timdavidfriedrich.moodtracker.app.ui.navigation.extensions.navigateBack
+import de.timdavidfriedrich.moodtracker.app.ui.navigation.extensions.navigateTo
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarScreen
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarState
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarViewModel
@@ -54,9 +56,11 @@ fun NavigationHost(
                         )
                     }
 
-                    else -> {
-                        /* do nothing */
-                    }
+                    else -> {} // do nothing
+                }
+
+                navController.afterNavigationHasFinished {
+                    value.previousState?.let { viewModel.loadPreviousState(it) }
                 }
             }
 
@@ -69,8 +73,8 @@ fun NavigationHost(
             typeMap = mapOf(
                 typeOf<RecordScreenType>() to NavType.EnumType(RecordScreenType::class.java),
             ),
-        ) {
-            val arguments = it.toRoute<Destination.Record>()
+        ) { backStackEntry ->
+            val arguments = backStackEntry.toRoute<Destination.Record>()
             val viewModel = koinViewModel<RecordViewModel> {
                 parametersOf(
                     arguments.recordScreenType,
@@ -85,21 +89,23 @@ fun NavigationHost(
 
                 when (val action = value.navigationAction) {
                     is Back -> {
-                        navController.navigateTo(Destination.Calendar)
+                        navController.navigateBack()
                     }
 
                     is ToMomentRecord -> {
                         navController.navigateTo(
-                            Destination.Record(
+                            destination = Destination.Record(
                                 recordScreenType = RecordScreenType.MOMENT,
                                 recordTimestamp = action.record?.date?.time ?: -1L,
                             )
                         )
                     }
 
-                    else -> {
-                        /* do nothing */
-                    }
+                    else -> {} // do nothing
+                }
+
+                navController.afterNavigationHasFinished {
+                    value.previousState?.let { viewModel.loadPreviousState(it) }
                 }
             }
 
@@ -107,21 +113,6 @@ fun NavigationHost(
                 onAction = viewModel::onAction,
                 state = state.value,
             )
-        }
-    }
-}
-
-private val NavHostController.canPopBackStack: Boolean
-    get() = currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
-
-private fun NavHostController.navigateBack() {
-    if (canPopBackStack) popBackStack()
-}
-
-private fun NavHostController.navigateTo(destination: Destination) {
-    navigate(destination) {
-        popUpTo(destination) {
-            inclusive = false
         }
     }
 }

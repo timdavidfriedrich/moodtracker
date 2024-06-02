@@ -37,6 +37,10 @@ class RecordViewModel(
     var state = MutableStateFlow<RecordState>(RecordState.Loading)
         private set
 
+    fun loadPreviousState(previousState: RecordState) {
+        state.update { previousState }
+    }
+
     init {
         when (recordScreenType) {
             RecordScreenType.DAY -> initDayRecordScreen(recordTimestamp)
@@ -47,13 +51,13 @@ class RecordViewModel(
     }
 
     private fun showMissingRecordTypeError() {
-        state.value = RecordState.Error.RecordTypeIsMissing
+        state.update { RecordState.Error.RecordTypeIsMissing }
     }
 
     private fun initAvailableEmotions() {
         viewModelScope.launch {
             getAllAvailableEmotionsUseCase()
-                .catch { state.value = RecordState.Error.Data }
+                .catch { state.update { RecordState.Error.Data } }
                 .collect { emotions ->
                     state.update { currentState ->
                         when (currentState) {
@@ -76,7 +80,7 @@ class RecordViewModel(
         viewModelScope.launch {
             val date = recordTimestamp?.let { Date(it) }
             val dayRecord = getOrCreateDayRecordByDateUseCase(date)
-                .catch { state.value = RecordState.Error.Data }
+                .catch { state.update { RecordState.Error.Data } }
                 .stateIn(viewModelScope).value
             state.update { current ->
                 when (current) {
@@ -91,7 +95,7 @@ class RecordViewModel(
         viewModelScope.launch {
             val date = recordTimestamp?.let { Date(it) }
             val momentRecord = getOrCreateMomentRecordByDate(date)
-                .catch { state.value = RecordState.Error.Data }
+                .catch { state.update { RecordState.Error.Data } }
                 .stateIn(viewModelScope).value
             state.update { current ->
                 when (current) {
@@ -115,11 +119,16 @@ class RecordViewModel(
     }
 
     private fun navigateBack() {
-        state.value = RecordState.Navigating(Back)
+        state.update { RecordState.Navigating(Back) }
     }
 
     private fun navigateToMomentRecord(momentRecord: Record.Moment? = null) {
-        state.value = RecordState.Navigating(ToMomentRecord(momentRecord))
+        state.update { current ->
+            RecordState.Navigating(
+                navigationAction = ToMomentRecord(momentRecord),
+                previousState = current,
+            )
+        }
     }
 
     private fun updateMoodSlider(score: Float) {

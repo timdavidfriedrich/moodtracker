@@ -20,7 +20,7 @@ import de.timdavidfriedrich.moodtracker.common.ui.theme.MoodTrackerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarSuccessTopBar(
+fun CalendarTopBar(
     state: CalendarState.Success,
     modifier: Modifier = Modifier,
     onAction: (CalendarAction) -> Unit = {},
@@ -64,6 +64,6 @@ fun CalendarSuccessTopBar(
 @Composable
 private fun CalendarBarPreview() {
     MoodTrackerTheme {
-        CalendarSuccessTopBar(CalendarState.Success())
+        CalendarTopBar(CalendarState.Success())
     }
 }

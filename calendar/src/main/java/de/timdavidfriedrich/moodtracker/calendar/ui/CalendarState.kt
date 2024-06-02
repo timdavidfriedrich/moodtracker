@@ -6,7 +6,8 @@ import java.time.YearMonth
 sealed interface CalendarState {
 
     data class Navigating(
-        val navigationAction: CalendarNavigationState
+        val navigationAction: CalendarNavigationState,
+        val previousState: CalendarState? = null,
     ) : CalendarState
 
     data object Loading : CalendarState

@@ -7,6 +7,7 @@ sealed interface RecordState {
 
     data class Navigating(
         val navigationAction: RecordNavigationAction,
+        val previousState: RecordState? = null,
     ) : RecordState
 
     data object Loading : RecordState
