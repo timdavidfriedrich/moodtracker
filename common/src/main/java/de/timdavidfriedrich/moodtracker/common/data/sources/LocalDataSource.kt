@@ -18,10 +18,10 @@ interface LocalDataSource {
     fun getAllDayRecordsWithMomentRecords(): Flow<List<DayRecordWithMomentRecordsRelation>>
     fun getDayRecordById(id: Long): Flow<DayRecordEntity?>
     fun getDayRecordWithMomentRecordsById(id: Long): Flow<DayRecordWithMomentRecordsRelation?>
-    suspend fun getDayRecordWithMomentRecordsByDateRange(
+    fun getDayRecordWithMomentRecordsByDateRange(
         startDate: Date,
         endDate: Date,
-    ): DayRecordWithMomentRecordsRelation?
+    ): Flow<DayRecordWithMomentRecordsRelation?>
 
     suspend fun deleteDayRecord(dayRecord: DayRecordEntity)
     suspend fun deleteDayRecordById(id: Long)

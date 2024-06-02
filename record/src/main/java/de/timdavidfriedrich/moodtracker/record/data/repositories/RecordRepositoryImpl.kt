@@ -12,26 +12,23 @@ import de.timdavidfriedrich.moodtracker.record.data.extensions.startOfTheDay
 import de.timdavidfriedrich.moodtracker.record.data.extensions.startOfTheMinute
 import de.timdavidfriedrich.moodtracker.record.domain.repositories.RecordRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import java.util.Date
 
 class RecordRepositoryImpl(
     private val localDataSource: LocalDataSource,
 ) : RecordRepository {
-    override fun getDayRecordById(id: Long): Flow<Record.Day> {
-        return localDataSource.getDayRecordWithMomentRecordsById(id).mapNotNull { dayRecord ->
-            DayRecordLocalMapper.toModel(dayRecord)
-        }
+    override fun getDayRecordById(id: Long): Flow<Record.Day?> {
+        return localDataSource.getDayRecordWithMomentRecordsById(id)
+            .map { DayRecordLocalMapper.toModel(it) }
     }
 
-    override suspend fun getDayRecordByDate(date: Date): Record.Day? {
-        return DayRecordLocalMapper.toModel(
-            localDataSource.getDayRecordWithMomentRecordsByDateRange(
-                startDate = date.startOfTheDay(),
-                endDate = date.endOfTheDay(),
-            )
-        )
+    override fun getDayRecordByDate(date: Date): Flow<Record.Day?> {
+        return localDataSource.getDayRecordWithMomentRecordsByDateRange(
+            startDate = date.startOfTheDay(),
+            endDate = date.endOfTheDay(),
+        ).map { DayRecordLocalMapper.toModel(it) }
     }
 
     override suspend fun saveDayRecord(dayRecord: Record.Day) {
@@ -52,19 +49,18 @@ class RecordRepositoryImpl(
         }
     }
 
-    override fun getMomentRecordByDate(date: Date): Flow<Record.Moment> {
+    override fun getMomentRecordByDate(date: Date): Flow<Record.Moment?> {
         return localDataSource.getMomentRecordByDateRange(
             startDate = date.startOfTheMinute(),
             endDate = date.endOfTheMinute(),
-        ).mapNotNull { MomentRecordLocalMapper.toModel(it) }
+        ).map { MomentRecordLocalMapper.toModel(it) }
     }
 
     override suspend fun saveMomentRecord(momentRecord: Record.Moment) {
         val dayRecord = getDayRecordByDate(momentRecord.date)
-            ?: Record.Day(date = momentRecord.date)
 
         val momentRecordWithDayRecordId = MomentRecordLocalMapper
-            .toEntityWithDayRecordId(momentRecord, dayRecord.id)
+            .toEntityWithDayRecordId(momentRecord, dayRecord.first()?.id)
 
         if (momentRecordWithDayRecordId.id == null) {
             localDataSource.insertMomentRecord(momentRecordWithDayRecordId)

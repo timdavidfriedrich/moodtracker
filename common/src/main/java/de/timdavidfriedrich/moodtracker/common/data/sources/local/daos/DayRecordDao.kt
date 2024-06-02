@@ -36,10 +36,10 @@ interface DayRecordDao {
 
     @Transaction
     @Query("SELECT * FROM dayRecords WHERE date >= :startDate AND date < :endDate")
-    suspend fun getDayRecordWithMomentRecordsByDateRange(
+    fun getDayRecordWithMomentRecordsByDateRange(
         startDate: Date,
         endDate: Date,
-    ): DayRecordWithMomentRecordsRelation?
+    ): Flow<DayRecordWithMomentRecordsRelation?>
 
     @Delete
     suspend fun deleteDayRecord(dayRecord: DayRecordEntity)

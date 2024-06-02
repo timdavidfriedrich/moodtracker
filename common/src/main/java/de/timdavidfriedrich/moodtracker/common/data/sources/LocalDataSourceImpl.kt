@@ -38,10 +38,10 @@ class LocalDataSourceImpl(
         return database.dayRecordDao().getDayRecordWithMomentRecordsById(id)
     }
 
-    override suspend fun getDayRecordWithMomentRecordsByDateRange(
+    override fun getDayRecordWithMomentRecordsByDateRange(
         startDate: Date,
         endDate: Date,
-    ): DayRecordWithMomentRecordsRelation? {
+    ): Flow<DayRecordWithMomentRecordsRelation?> {
         return database.dayRecordDao().getDayRecordWithMomentRecordsByDateRange(startDate, endDate)
     }
 
