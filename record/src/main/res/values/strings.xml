@@ -20,4 +20,9 @@
     <string name="delete_confirmation_text">This cannot be undone.</string>
     <string name="delete_confirmation_title">Delete?</string>
     <string name="cancel_label" tools:ignore="ButtonCase">cancel</string>
+    <string name="go_back_label">go back</string>
+    <string name="stay_label">stay</string>
+    <string name="back_confirmation_title">Go back without saving?</string>
+    <string name="back_confirmation_text">Your current changes won\'t be saved.</string>
+    <string name="add_label">add</string>
 </resources>

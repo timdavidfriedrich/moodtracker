@@ -21,17 +21,20 @@ sealed interface RecordState {
         val record: Record
         val availableEmotions: List<Emotion>
         val deleteConfirmationDialogIsShown: Boolean
+        val backConfirmationDialogIsShown: Boolean
 
         data class Day(
             override val record: Record.Day,
             override val availableEmotions: List<Emotion> = listOf(),
             override val deleteConfirmationDialogIsShown: Boolean = false,
+            override val backConfirmationDialogIsShown: Boolean = false,
         ) : Success
 
         data class Moment(
             override val record: Record.Moment,
             override val availableEmotions: List<Emotion> = listOf(),
             override val deleteConfirmationDialogIsShown: Boolean = false,
+            override val backConfirmationDialogIsShown: Boolean = false,
         ) : Success
     }
 }

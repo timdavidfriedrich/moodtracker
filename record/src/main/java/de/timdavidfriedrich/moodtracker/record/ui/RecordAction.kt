@@ -4,6 +4,8 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Emotion
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 
 sealed interface RecordAction {
+    data object RequestBackClick : RecordAction
+    data object CancelBackClick : RecordAction
     data object BackClick : RecordAction
     data object AddCurrentSong : RecordAction
     data class NoteChange(val note: String) : RecordAction

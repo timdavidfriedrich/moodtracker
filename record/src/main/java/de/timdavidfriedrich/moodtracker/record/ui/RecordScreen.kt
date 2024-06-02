@@ -31,6 +31,7 @@ import de.timdavidfriedrich.moodtracker.record.ui.components.MoodSliderCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.NoteCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.SongCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.TodaysMoodsCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.dialogs.BackConfirmationDialog
 import de.timdavidfriedrich.moodtracker.record.ui.components.dialogs.DeleteConfirmationDialog
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
@@ -43,6 +44,7 @@ fun RecordScreen(
     Scaffold(
         topBar = {
             RecordTopBar(
+                state = state,
                 onAction = { onAction(it) }
             )
         },
@@ -116,12 +118,36 @@ private fun RecordScreenSuccess(
         }
 
         item {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(
-                    dimensionResource(commonR.dimen.padding_extra_small)
-                ),
-                modifier = Modifier.padding(top = dimensionResource(commonR.dimen.padding_medium)),
-            ) {
+            RecordButtons(state, Modifier, onAction)
+        }
+    }
+}
+
+@Composable
+private fun RecordButtons(
+    state: RecordState.Success,
+    modifier: Modifier = Modifier,
+    onAction: (RecordAction) -> Unit,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(commonR.dimen.padding_extra_small)
+        ),
+        modifier = modifier.padding(
+            top = dimensionResource(commonR.dimen.padding_medium)
+        ),
+    ) {
+        when (state.record.id) {
+            null -> {
+                Button(
+                    onClick = { onAction(RecordAction.SaveRecord) },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = stringResource(id = R.string.add_label))
+                }
+            }
+
+            else -> {
                 Button(
                     onClick = { onAction(RecordAction.SaveRecord) },
                     modifier = Modifier.fillMaxWidth(),
@@ -132,10 +158,11 @@ private fun RecordScreenSuccess(
                     onClick = { onAction(RecordAction.RequestDeleteRecord) },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
+                    if (state.deleteConfirmationDialogIsShown) {
+                        DeleteConfirmationDialog(onAction)
+                    }
+
                     Text(text = stringResource(id = R.string.delete_label))
-                }
-                if (state.deleteConfirmationDialogIsShown) {
-                    DeleteConfirmationDialog(onAction)
                 }
             }
         }
@@ -145,14 +172,19 @@ private fun RecordScreenSuccess(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecordTopBar(
+    state: RecordState,
     modifier: Modifier = Modifier,
     onAction: (RecordAction) -> Unit = {},
 ) {
+    if (state is RecordState.Success && state.backConfirmationDialogIsShown) {
+        BackConfirmationDialog(onAction)
+    }
+
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.day_record_title)) },
         navigationIcon = {
             IconButton(
-                onClick = { onAction(RecordAction.BackClick) }
+                onClick = { onAction(RecordAction.RequestBackClick) }
             ) {
                 Icon(Icons.AutoMirrored.Rounded.ArrowBack, null)
             }

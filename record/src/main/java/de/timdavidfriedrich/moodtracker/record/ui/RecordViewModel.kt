@@ -110,18 +110,16 @@ class RecordViewModel(
             is RecordAction.Moment.MoodSliderChange -> updateMoodSlider(action.score)
             is RecordAction.NoteChange -> updateNote(action.note)
             is RecordAction.SaveRecord -> saveCurrentRecord()
-            is RecordAction.RequestDeleteRecord -> requestDeleteRecord()
-            is RecordAction.CancelDeleteRecord -> cancelDeleteRecord()
+            is RecordAction.RequestDeleteRecord -> toggleDeleteConfirmationDialog(true)
+            is RecordAction.CancelDeleteRecord -> toggleDeleteConfirmationDialog(false)
             is RecordAction.DeleteRecord -> deleteRecord()
+            is RecordAction.RequestBackClick -> toggleBackConfirmationDialog(true)
+            is RecordAction.CancelBackClick -> toggleBackConfirmationDialog(false)
             is RecordAction.BackClick -> navigateBack()
             is RecordAction.Day.AddMomentRecord -> navigateToMomentRecord()
             is RecordAction.Moment.EditMomentRecord -> navigateToMomentRecord(action.moment)
             else -> {}
         }
-    }
-
-    private fun navigateBack() {
-        state.update { RecordState.Navigating(Back) }
     }
 
     private fun navigateToMomentRecord(momentRecord: Record.Moment? = null) {
@@ -179,31 +177,15 @@ class RecordViewModel(
         navigateBack()
     }
 
-    private fun requestDeleteRecord() {
+    private fun toggleDeleteConfirmationDialog(visible: Boolean) {
         state.update { current ->
             when (current) {
                 is RecordState.Success.Day -> {
-                    current.copy(deleteConfirmationDialogIsShown = true)
+                    current.copy(deleteConfirmationDialogIsShown = visible)
                 }
 
                 is RecordState.Success.Moment -> {
-                    current.copy(deleteConfirmationDialogIsShown = true)
-                }
-
-                else -> current
-            }
-        }
-    }
-
-    private fun cancelDeleteRecord() {
-        state.update { current ->
-            when (current) {
-                is RecordState.Success.Day -> {
-                    current.copy(deleteConfirmationDialogIsShown = false)
-                }
-
-                is RecordState.Success.Moment -> {
-                    current.copy(deleteConfirmationDialogIsShown = false)
+                    current.copy(deleteConfirmationDialogIsShown = visible)
                 }
 
                 else -> current
@@ -220,5 +202,25 @@ class RecordViewModel(
             }
         }
         navigateBack()
+    }
+
+    private fun toggleBackConfirmationDialog(visible: Boolean) {
+        state.update { current ->
+            when (current) {
+                is RecordState.Success.Day -> {
+                    current.copy(backConfirmationDialogIsShown = visible)
+                }
+
+                is RecordState.Success.Moment -> {
+                    current.copy(backConfirmationDialogIsShown = visible)
+                }
+
+                else -> current
+            }
+        }
+    }
+
+    private fun navigateBack() {
+        state.update { RecordState.Navigating(Back) }
     }
 }
