@@ -9,6 +9,9 @@ sealed interface RecordAction {
     data class NoteChange(val note: String) : RecordAction
     data class ToggleEmotion(val emotion: Emotion) : Moment
     data object SaveRecord : RecordAction
+    data object RequestDeleteRecord : RecordAction
+    data object CancelDeleteRecord : RecordAction
+    data object DeleteRecord : RecordAction
 
     sealed interface Day : RecordAction {
         data object AddMomentRecord : Day

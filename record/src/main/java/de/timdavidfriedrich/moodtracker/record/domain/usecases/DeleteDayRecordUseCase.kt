@@ -6,5 +6,12 @@ import de.timdavidfriedrich.moodtracker.record.domain.repositories.RecordReposit
 class DeleteDayRecordUseCase(
     private val recordRepository: RecordRepository,
 ) {
-    suspend operator fun invoke(record: Record.Day) = recordRepository.deleteDayRecord(record)
+    suspend operator fun invoke(record: Record.Day, deleteMomentRecords: Boolean = true) {
+        if (deleteMomentRecords) {
+            for (moment in record.moments) {
+                recordRepository.deleteMomentRecord(moment)
+            }
+        }
+        recordRepository.deleteDayRecord(record)
+    }
 }

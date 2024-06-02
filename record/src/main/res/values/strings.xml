@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="day_record_title">How have u been today?</string>
     <string name="todays_moods_card_title">Today\'s moods</string>
     <string name="todays_moods_card_add_moment_label">Add a mood</string>
@@ -15,4 +15,9 @@
     <string name="refresh_song_description">Refresh song</string>
     <string name="mood_score_description">Mood score: %1$s</string>
     <string name="add_moment_record_description">Add moment record</string>
+    <string name="delete_label">delete</string>
+    <string name="save_label">save</string>
+    <string name="delete_confirmation_text">This cannot be undone.</string>
+    <string name="delete_confirmation_title">Delete?</string>
+    <string name="cancel_label" tools:ignore="ButtonCase">cancel</string>
 </resources>

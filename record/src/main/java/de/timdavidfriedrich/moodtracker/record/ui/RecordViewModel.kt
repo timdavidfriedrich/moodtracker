@@ -6,6 +6,7 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Mood
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.navigation.RecordScreenType
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteDayRecordUseCase
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteMomentRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetAllAvailableEmotionsUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateDayRecordByDateUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateMomentRecordByDate
@@ -27,7 +28,7 @@ class RecordViewModel(
     private val saveDayRecordUseCase: SaveDayRecordUseCase,
     private val deleteDayRecordUseCase: DeleteDayRecordUseCase,
     private val saveMomentRecordUseCase: SaveMomentRecordUseCase,
-    private val deleteMomentRecordUseCase: DeleteDayRecordUseCase,
+    private val deleteMomentRecordUseCase: DeleteMomentRecordUseCase,
 ) : ViewModel() {
 
     var state = MutableStateFlow<RecordState>(RecordState.Loading)
@@ -109,6 +110,9 @@ class RecordViewModel(
             is RecordAction.Moment.MoodSliderChange -> updateMoodSlider(action.score)
             is RecordAction.NoteChange -> updateNote(action.note)
             is RecordAction.SaveRecord -> saveCurrentRecord()
+            is RecordAction.RequestDeleteRecord -> requestDeleteRecord()
+            is RecordAction.CancelDeleteRecord -> cancelDeleteRecord()
+            is RecordAction.DeleteRecord -> deleteRecord()
             is RecordAction.BackClick -> navigateBack()
             is RecordAction.Day.AddMomentRecord -> navigateToMomentRecord()
             is RecordAction.Moment.EditMomentRecord -> navigateToMomentRecord(action.moment)
@@ -170,6 +174,49 @@ class RecordViewModel(
             when (val record = (state.value as RecordState.Success).record) {
                 is Record.Day -> saveDayRecordUseCase(record)
                 is Record.Moment -> saveMomentRecordUseCase(record)
+            }
+        }
+        navigateBack()
+    }
+
+    private fun requestDeleteRecord() {
+        state.update { current ->
+            when (current) {
+                is RecordState.Success.Day -> {
+                    current.copy(deleteConfirmationDialogIsShown = true)
+                }
+
+                is RecordState.Success.Moment -> {
+                    current.copy(deleteConfirmationDialogIsShown = true)
+                }
+
+                else -> current
+            }
+        }
+    }
+
+    private fun cancelDeleteRecord() {
+        state.update { current ->
+            when (current) {
+                is RecordState.Success.Day -> {
+                    current.copy(deleteConfirmationDialogIsShown = false)
+                }
+
+                is RecordState.Success.Moment -> {
+                    current.copy(deleteConfirmationDialogIsShown = false)
+                }
+
+                else -> current
+            }
+        }
+    }
+
+    private fun deleteRecord() {
+        if (state.value !is RecordState.Success) return
+        viewModelScope.launch {
+            when (val record = (state.value as RecordState.Success).record) {
+                is Record.Day -> deleteDayRecordUseCase(record)
+                is Record.Moment -> deleteMomentRecordUseCase(record)
             }
         }
         navigateBack()

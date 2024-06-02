@@ -1,6 +1,8 @@
 package de.timdavidfriedrich.moodtracker.record.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import de.timdavidfriedrich.moodtracker.common.ui.components.AttentionButton
 import de.timdavidfriedrich.moodtracker.common.ui.components.ErrorElement
 import de.timdavidfriedrich.moodtracker.common.ui.components.LoadingElement
 import de.timdavidfriedrich.moodtracker.record.R
@@ -28,6 +31,7 @@ import de.timdavidfriedrich.moodtracker.record.ui.components.MoodSliderCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.NoteCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.SongCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.TodaysMoodsCard
+import de.timdavidfriedrich.moodtracker.record.ui.components.dialogs.DeleteConfirmationDialog
 import de.timdavidfriedrich.moodtracker.common.R as commonR
 
 @Composable
@@ -72,6 +76,9 @@ private fun RecordScreenSuccess(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(commonR.dimen.padding_medium)),
+        contentPadding = PaddingValues(
+            bottom = dimensionResource(commonR.dimen.padding_large),
+        ),
         modifier = modifier,
     ) {
         item {
@@ -109,11 +116,27 @@ private fun RecordScreenSuccess(
         }
 
         item {
-            Button(
-                onClick = { onAction(RecordAction.SaveRecord) },
-                modifier = Modifier.fillMaxWidth(),
+            Column(
+                verticalArrangement = Arrangement.spacedBy(
+                    dimensionResource(commonR.dimen.padding_extra_small)
+                ),
+                modifier = Modifier.padding(top = dimensionResource(commonR.dimen.padding_medium)),
             ) {
-                Text(text = stringResource(id = R.string.moment_record_save_label))
+                Button(
+                    onClick = { onAction(RecordAction.SaveRecord) },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = stringResource(id = R.string.save_label))
+                }
+                AttentionButton(
+                    onClick = { onAction(RecordAction.RequestDeleteRecord) },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(text = stringResource(id = R.string.delete_label))
+                }
+                if (state.deleteConfirmationDialogIsShown) {
+                    DeleteConfirmationDialog(onAction)
+                }
             }
         }
     }
