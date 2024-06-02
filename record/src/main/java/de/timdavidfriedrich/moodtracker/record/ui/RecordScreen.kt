@@ -1,5 +1,6 @@
 package de.timdavidfriedrich.moodtracker.record.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,6 +42,9 @@ fun RecordScreen(
     state: RecordState,
     modifier: Modifier = Modifier,
 ) {
+    BackHandler {
+        onAction(RecordAction.RequestBackClick)
+    }
     Scaffold(
         topBar = {
             RecordTopBar(

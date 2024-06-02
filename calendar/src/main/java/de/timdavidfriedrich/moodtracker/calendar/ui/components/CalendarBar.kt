@@ -2,6 +2,7 @@ package de.timdavidfriedrich.moodtracker.calendar.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.ViewAgenda
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +34,16 @@ fun CalendarTopBar(
             )
         },
         actions = {
+            if (!state.isCurrentMonthSelected) {
+                IconButton(
+                    onClick = { onAction(CalendarAction.JumpToToday) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.CalendarToday,
+                        contentDescription = "Jump to today",
+                    )
+                }
+            }
             IconButton(
                 onClick = { onAction(CalendarAction.SwitchCalendarType) }
             ) {
@@ -64,6 +75,6 @@ fun CalendarTopBar(
 @Composable
 private fun CalendarBarPreview() {
     MoodTrackerTheme {
-        CalendarTopBar(CalendarState.Success())
+        CalendarTopBar(CalendarState.Success(isCurrentMonthSelected = false))
     }
 }

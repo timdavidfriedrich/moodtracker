@@ -1,5 +1,6 @@
 package de.timdavidfriedrich.moodtracker.calendar.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,9 @@ fun CalendarScreen(
     state: CalendarState,
     modifier: Modifier = Modifier,
 ) {
+    BackHandler {
+        onAction(CalendarAction.JumpToToday)
+    }
     Scaffold(
         topBar = {
             if (state is CalendarState.Success) {
