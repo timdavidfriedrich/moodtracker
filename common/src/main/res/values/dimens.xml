@@ -2,7 +2,7 @@
 <resources>
     <dimen name="grid_column_size_medium">48dp</dimen>
     <dimen name="grid_column_size_large">64dp</dimen>
-    <dimen name="grid_column_size_extra_large">96dp</dimen>
+    <dimen name="grid_column_size_extra_large">72dp</dimen>
     <dimen name="icon_size_small">32dp</dimen>
     <dimen name="icon_size_medium">48dp</dimen>
     <dimen name="padding_none">0dp</dimen>
