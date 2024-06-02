@@ -5,8 +5,6 @@ import de.timdavidfriedrich.moodtracker.record.domain.repositories.RecordReposit
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteDayRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteMomentRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetAllAvailableEmotionsUseCase
-import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByDateUseCase
-import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByIdUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateDayRecordByDateUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateMomentRecordByDate
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseCase
@@ -25,8 +23,6 @@ object Koin {
                 getAllAvailableEmotionsUseCase = get(),
                 getOrCreateDayRecordByDateUseCase = get(),
                 getOrCreateMomentRecordByDate = get(),
-                getDayRecordByIdUseCase = get(),
-                getDayRecordByDateUseCase = get(),
                 saveDayRecordUseCase = get(),
                 deleteDayRecordUseCase = get(),
                 saveMomentRecordUseCase = get(),
@@ -42,8 +38,6 @@ object Koin {
         single<GetOrCreateMomentRecordByDate> {
             GetOrCreateMomentRecordByDate(recordRepository = get())
         }
-        single<GetDayRecordByIdUseCase> { GetDayRecordByIdUseCase(recordRepository = get()) }
-        single<GetDayRecordByDateUseCase> { GetDayRecordByDateUseCase(recordRepository = get()) }
         single<SaveDayRecordUseCase> { SaveDayRecordUseCase(recordRepository = get()) }
         single<DeleteDayRecordUseCase> { DeleteDayRecordUseCase(recordRepository = get()) }
         single<SaveMomentRecordUseCase> { SaveMomentRecordUseCase(recordRepository = get()) }

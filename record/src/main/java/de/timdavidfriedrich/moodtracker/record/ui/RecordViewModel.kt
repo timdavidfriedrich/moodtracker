@@ -7,8 +7,6 @@ import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.navigation.RecordScreenType
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteDayRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetAllAvailableEmotionsUseCase
-import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByDateUseCase
-import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByIdUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateDayRecordByDateUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateMomentRecordByDate
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseCase
@@ -24,8 +22,6 @@ class RecordViewModel(
     recordScreenType: RecordScreenType,
     recordTimestamp: Long? = null,
     private val getAllAvailableEmotionsUseCase: GetAllAvailableEmotionsUseCase,
-    private val getDayRecordByIdUseCase: GetDayRecordByIdUseCase,
-    private val getDayRecordByDateUseCase: GetDayRecordByDateUseCase,
     private val getOrCreateDayRecordByDateUseCase: GetOrCreateDayRecordByDateUseCase,
     private val getOrCreateMomentRecordByDate: GetOrCreateMomentRecordByDate,
     private val saveDayRecordUseCase: SaveDayRecordUseCase,
