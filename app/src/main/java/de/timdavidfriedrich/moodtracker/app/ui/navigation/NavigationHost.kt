@@ -13,11 +13,14 @@ import androidx.navigation.toRoute
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarScreen
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarState
 import de.timdavidfriedrich.moodtracker.calendar.ui.CalendarViewModel
+import de.timdavidfriedrich.moodtracker.calendar.ui.ToRecord
 import de.timdavidfriedrich.moodtracker.common.ui.navigation.Destination
 import de.timdavidfriedrich.moodtracker.common.ui.navigation.RecordScreenType
+import de.timdavidfriedrich.moodtracker.record.ui.Back
 import de.timdavidfriedrich.moodtracker.record.ui.RecordScreen
 import de.timdavidfriedrich.moodtracker.record.ui.RecordState
 import de.timdavidfriedrich.moodtracker.record.ui.RecordViewModel
+import de.timdavidfriedrich.moodtracker.record.ui.ToMomentRecord
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.reflect.typeOf
@@ -39,11 +42,20 @@ fun NavigationHost(
 
             LaunchedEffect(key1 = state.value) {
                 val value = state.value
-                if (value !is CalendarState.Success) return@LaunchedEffect
+                if (value !is CalendarState.Navigating) return@LaunchedEffect
 
-                when {
-                    value.clickedOnAddRecord -> {
-                        navController.navigateTo(Destination.Record(RecordScreenType.DAY))
+                when (val action = value.navigationAction) {
+                    is ToRecord -> {
+                        navController.navigateTo(
+                            Destination.Record(
+                                recordScreenType = RecordScreenType.DAY,
+                                recordTimestamp = action.record?.date?.time ?: -1L,
+                            )
+                        )
+                    }
+
+                    else -> {
+                        /* do nothing */
                     }
                 }
             }
@@ -58,21 +70,35 @@ fun NavigationHost(
                 typeOf<RecordScreenType>() to NavType.EnumType(RecordScreenType::class.java),
             ),
         ) {
-            val recordScreenType = it.toRoute<Destination.Record>().recordScreenType
-            val viewModel = koinViewModel<RecordViewModel> { parametersOf(recordScreenType) }
+            val arguments = it.toRoute<Destination.Record>()
+            val viewModel = koinViewModel<RecordViewModel> {
+                parametersOf(
+                    arguments.recordScreenType,
+                    arguments.recordTimestamp.takeUnless { it == -1L },
+                )
+            }
             val state = viewModel.state.collectAsState()
 
             LaunchedEffect(key1 = state.value) {
                 val value = state.value
-                if (value !is RecordState.Success) return@LaunchedEffect
+                if (value !is RecordState.Navigating) return@LaunchedEffect
 
-                when {
-                    value.clickedBack -> {
+                when (val action = value.navigationAction) {
+                    is Back -> {
                         navController.navigateTo(Destination.Calendar)
                     }
 
-                    value is RecordState.Success.Day && value.clickedOnAddMoment -> {
-                        navController.navigateTo(Destination.Record(RecordScreenType.MOMENT))
+                    is ToMomentRecord -> {
+                        navController.navigateTo(
+                            Destination.Record(
+                                recordScreenType = RecordScreenType.MOMENT,
+                                recordTimestamp = action.record?.date?.time ?: -1L,
+                            )
+                        )
+                    }
+
+                    else -> {
+                        /* do nothing */
                     }
                 }
             }

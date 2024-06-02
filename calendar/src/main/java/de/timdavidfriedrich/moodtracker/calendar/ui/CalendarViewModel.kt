@@ -3,6 +3,7 @@ package de.timdavidfriedrich.moodtracker.calendar.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.timdavidfriedrich.moodtracker.calendar.domain.usecases.GetAllDayRecordsUseCase
+import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.common.ui.extensions.toYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -29,6 +30,7 @@ class CalendarViewModel(
             is CalendarAction.PickMonth -> pickMonth(action.month)
             is CalendarAction.SwitchCalendarType -> switchCalendarType()
             is CalendarAction.AddRecord -> navigateToRecord()
+            is CalendarAction.EditRecord -> navigateToRecord(action.dayRecord)
             else -> Unit
         }
     }
@@ -37,11 +39,8 @@ class CalendarViewModel(
         updateMonthData()
     }
 
-    private fun navigateToRecord() {
-        state.update {
-            if (it !is CalendarState.Success) return@update it
-            it.copy(clickedOnAddRecord = true)
-        }
+    private fun navigateToRecord(record: Record? = null) {
+        state.value = CalendarState.Navigating(ToRecord(record))
     }
 
     private fun updateMonthData() {

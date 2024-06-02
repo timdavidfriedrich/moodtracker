@@ -8,5 +8,8 @@ sealed interface Destination {
     data object Calendar : Destination
 
     @Serializable
-    data class Record(val recordScreenType: RecordScreenType) : Destination
+    data class Record(
+        val recordScreenType: RecordScreenType,
+        val recordTimestamp: Long = -1L,
+    ) : Destination
 }

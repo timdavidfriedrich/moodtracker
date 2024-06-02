@@ -7,7 +7,9 @@ import de.timdavidfriedrich.moodtracker.common.data.sources.local.mappers.Moment
 import de.timdavidfriedrich.moodtracker.common.domain.models.Emotion
 import de.timdavidfriedrich.moodtracker.common.domain.models.Record
 import de.timdavidfriedrich.moodtracker.record.data.extensions.endOfTheDay
+import de.timdavidfriedrich.moodtracker.record.data.extensions.endOfTheMinute
 import de.timdavidfriedrich.moodtracker.record.data.extensions.startOfTheDay
+import de.timdavidfriedrich.moodtracker.record.data.extensions.startOfTheMinute
 import de.timdavidfriedrich.moodtracker.record.domain.repositories.RecordRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -48,6 +50,13 @@ class RecordRepositoryImpl(
         dayRecordWithMomentRecords?.let {
             localDataSource.deleteDayRecord(it.dayRecord)
         }
+    }
+
+    override fun getMomentRecordByDate(date: Date): Flow<Record.Moment> {
+        return localDataSource.getMomentRecordByDateRange(
+            startDate = date.startOfTheMinute(),
+            endDate = date.endOfTheMinute(),
+        ).mapNotNull { MomentRecordLocalMapper.toModel(it) }
     }
 
     override suspend fun saveMomentRecord(momentRecord: Record.Moment) {

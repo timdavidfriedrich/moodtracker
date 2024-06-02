@@ -42,40 +42,24 @@ fun CalendarScreen(
         },
         modifier = modifier.fillMaxSize()
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(
-                    start = dimensionResource(R.dimen.padding_large),
-                    end = dimensionResource(R.dimen.padding_large),
-                ),
-        ) {
-            when (state) {
-                is CalendarState.Loading -> CalendarScreenLoading(modifier)
-                is CalendarState.Error -> CalendarScreenError(modifier)
-                is CalendarState.Success -> {
-                    CalendarScreenSuccess(
-                        state = state,
-                        onAction = { onAction(it) }
-                    )
-                }
+        when (state) {
+            is CalendarState.Navigating -> LoadingElement(modifier.padding(innerPadding))
+            is CalendarState.Loading -> LoadingElement(modifier.padding(innerPadding))
+            is CalendarState.Error -> ErrorElement(modifier.padding(innerPadding))
+            is CalendarState.Success -> {
+                CalendarScreenSuccess(
+                    state = state,
+                    modifier = modifier
+                        .padding(innerPadding)
+                        .padding(
+                            start = dimensionResource(R.dimen.padding_medium),
+                            end = dimensionResource(R.dimen.padding_medium),
+                        ),
+                    onAction = { onAction(it) },
+                )
             }
         }
     }
-}
-
-@Composable
-private fun CalendarScreenLoading(
-    modifier: Modifier = Modifier,
-) {
-    LoadingElement(modifier)
-}
-
-@Composable
-private fun CalendarScreenError(
-    modifier: Modifier = Modifier,
-) {
-    ErrorElement(modifier)
 }
 
 @Composable

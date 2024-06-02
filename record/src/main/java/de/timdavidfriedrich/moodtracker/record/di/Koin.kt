@@ -7,6 +7,8 @@ import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteMomentRecor
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetAllAvailableEmotionsUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByDateUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByIdUseCase
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateDayRecordByDateUseCase
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateMomentRecordByDate
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveMomentRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.ui.RecordViewModel
@@ -19,7 +21,10 @@ object Koin {
         viewModel<RecordViewModel> {
             RecordViewModel(
                 recordScreenType = get(),
+                recordTimestamp = getOrNull(),
                 getAllAvailableEmotionsUseCase = get(),
+                getOrCreateDayRecordByDateUseCase = get(),
+                getOrCreateMomentRecordByDate = get(),
                 getDayRecordByIdUseCase = get(),
                 getDayRecordByDateUseCase = get(),
                 saveDayRecordUseCase = get(),
@@ -31,6 +36,12 @@ object Koin {
         single<RecordRepository> { RecordRepositoryImpl(localDataSource = get()) }
 
         // Use cases
+        single<GetOrCreateDayRecordByDateUseCase> {
+            GetOrCreateDayRecordByDateUseCase(recordRepository = get())
+        }
+        single<GetOrCreateMomentRecordByDate> {
+            GetOrCreateMomentRecordByDate(recordRepository = get())
+        }
         single<GetDayRecordByIdUseCase> { GetDayRecordByIdUseCase(recordRepository = get()) }
         single<GetDayRecordByDateUseCase> { GetDayRecordByDateUseCase(recordRepository = get()) }
         single<SaveDayRecordUseCase> { SaveDayRecordUseCase(recordRepository = get()) }

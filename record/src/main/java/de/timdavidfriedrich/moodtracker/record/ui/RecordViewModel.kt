@@ -9,20 +9,25 @@ import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteDayRecordUs
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetAllAvailableEmotionsUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByDateUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetDayRecordByIdUseCase
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateDayRecordByDateUseCase
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateMomentRecordByDate
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveMomentRecordUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.util.Date
 
 class RecordViewModel(
     recordScreenType: RecordScreenType,
+    recordTimestamp: Long? = null,
     private val getAllAvailableEmotionsUseCase: GetAllAvailableEmotionsUseCase,
     private val getDayRecordByIdUseCase: GetDayRecordByIdUseCase,
     private val getDayRecordByDateUseCase: GetDayRecordByDateUseCase,
+    private val getOrCreateDayRecordByDateUseCase: GetOrCreateDayRecordByDateUseCase,
+    private val getOrCreateMomentRecordByDate: GetOrCreateMomentRecordByDate,
     private val saveDayRecordUseCase: SaveDayRecordUseCase,
     private val deleteDayRecordUseCase: DeleteDayRecordUseCase,
     private val saveMomentRecordUseCase: SaveMomentRecordUseCase,
@@ -34,8 +39,8 @@ class RecordViewModel(
 
     init {
         when (recordScreenType) {
-            RecordScreenType.DAY -> initDayRecordScreen()
-            RecordScreenType.MOMENT -> initMomentRecordScreen()
+            RecordScreenType.DAY -> initDayRecordScreen(recordTimestamp)
+            RecordScreenType.MOMENT -> initMomentRecordScreen(recordTimestamp)
             else -> showMissingRecordTypeError()
         }
         initAvailableEmotions()
@@ -67,24 +72,34 @@ class RecordViewModel(
         }
     }
 
-    private fun initDayRecordScreen() {
+    private fun initDayRecordScreen(recordTimestamp: Long? = null) {
         viewModelScope.launch {
-            val dayRecord = getDayRecordByDateUseCase(Date.from(Instant.now()))
-            if (state.value !is RecordState.Success) {
-                state.value = RecordState.Success.Day(Record.Day())
-            }
-            state.update {
-                (it as RecordState.Success.Day).copy(
-                    record = dayRecord ?: Record.Day(),
-                )
+            val date = recordTimestamp?.let { Date(it) }
+            val dayRecord = getOrCreateDayRecordByDateUseCase(date)
+                .catch { state.value = RecordState.Error.Data }
+                .stateIn(viewModelScope).value
+            state.update { current ->
+                when (current) {
+                    is RecordState.Success.Day -> current.copy(record = dayRecord)
+                    else -> RecordState.Success.Day(dayRecord)
+                }
             }
         }
     }
 
-    private fun initMomentRecordScreen() {
-        state.value = RecordState.Success.Moment(
-            record = Record.Moment(),
-        )
+    private fun initMomentRecordScreen(recordTimestamp: Long? = null) {
+        viewModelScope.launch {
+            val date = recordTimestamp?.let { Date(it) }
+            val momentRecord = getOrCreateMomentRecordByDate(date)
+                .catch { state.value = RecordState.Error.Data }
+                .stateIn(viewModelScope).value
+            state.update { current ->
+                when (current) {
+                    is RecordState.Success.Moment -> current.copy(record = momentRecord)
+                    else -> RecordState.Success.Moment(momentRecord)
+                }
+            }
+        }
     }
 
     fun onAction(action: RecordAction) {
@@ -94,27 +109,17 @@ class RecordViewModel(
             is RecordAction.SaveRecord -> saveCurrentRecord()
             is RecordAction.BackClick -> navigateBack()
             is RecordAction.Day.AddMomentRecord -> navigateToMomentRecord()
+            is RecordAction.Moment.EditMomentRecord -> navigateToMomentRecord(action.moment)
             else -> {}
         }
     }
 
     private fun navigateBack() {
-        state.update {
-            when (it) {
-                is RecordState.Success.Day -> it.copy(clickedBack = true)
-                is RecordState.Success.Moment -> it.copy(clickedBack = true)
-                else -> it
-            }
-        }
+        state.value = RecordState.Navigating(Back)
     }
 
-    private fun navigateToMomentRecord() {
-        state.update {
-            when (it) {
-                is RecordState.Success.Day -> it.copy(clickedOnAddMoment = true)
-                else -> it
-            }
-        }
+    private fun navigateToMomentRecord(momentRecord: Record.Moment? = null) {
+        state.value = RecordState.Navigating(ToMomentRecord(momentRecord))
     }
 
     private fun updateMoodSlider(score: Float) {

@@ -5,9 +5,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import de.timdavidfriedrich.moodtracker.common.data.sources.local.entities.MomentRecordEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface MomentRecordDao {
@@ -22,6 +24,13 @@ interface MomentRecordDao {
 
     @Query("SELECT * FROM momentRecords WHERE id = :id")
     fun getMomentRecordById(id: Long): Flow<MomentRecordEntity?>
+
+    @Transaction
+    @Query("SELECT * FROM momentRecords WHERE date >= :startDate AND date < :endDate")
+    fun getMomentRecordByDateRange(
+        startDate: Date,
+        endDate: Date,
+    ): Flow<MomentRecordEntity?>
 
     @Delete
     suspend fun deleteMomentRecord(momentRecord: MomentRecordEntity)

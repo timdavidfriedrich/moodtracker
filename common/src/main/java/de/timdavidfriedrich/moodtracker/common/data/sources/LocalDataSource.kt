@@ -39,6 +39,7 @@ interface LocalDataSource {
     suspend fun updateMomentRecord(momentRecord: MomentRecordEntity)
     fun getAllMomentRecords(): Flow<List<MomentRecordEntity>>
     fun getMomentRecordById(id: Long): Flow<MomentRecordEntity?>
+    fun getMomentRecordByDateRange(startDate: Date, endDate: Date): Flow<MomentRecordEntity?>
     suspend fun deleteMomentRecord(momentRecord: MomentRecordEntity)
     suspend fun deleteMomentRecordById(id: Long)
 

@@ -10,6 +10,7 @@ interface RecordRepository {
     suspend fun getDayRecordByDate(date: Date): Record.Day?
     suspend fun saveDayRecord(dayRecord: Record.Day)
     suspend fun deleteDayRecord(dayRecord: Record.Day)
+    fun getMomentRecordByDate(date: Date): Flow<Record.Moment?>
     suspend fun saveMomentRecord(momentRecord: Record.Moment)
     suspend fun deleteMomentRecord(momentRecord: Record.Moment)
     fun getAllAvailableEmotions(): Flow<List<Emotion>>

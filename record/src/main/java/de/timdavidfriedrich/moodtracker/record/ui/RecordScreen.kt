@@ -1,7 +1,6 @@
 package de.timdavidfriedrich.moodtracker.record.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import de.timdavidfriedrich.moodtracker.common.ui.components.ErrorElement
+import de.timdavidfriedrich.moodtracker.common.ui.components.LoadingElement
 import de.timdavidfriedrich.moodtracker.record.R
 import de.timdavidfriedrich.moodtracker.record.ui.components.DateCard
 import de.timdavidfriedrich.moodtracker.record.ui.components.EmotionsCard
@@ -44,8 +45,9 @@ fun RecordScreen(
         modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
         when (state) {
-            is RecordState.Loading -> RecordScreenLoading(modifier.padding(innerPadding))
-            is RecordState.Error -> RecordScreenError(modifier.padding(innerPadding))
+            is RecordState.Navigating -> LoadingElement(modifier.padding(innerPadding))
+            is RecordState.Loading -> LoadingElement(modifier.padding(innerPadding))
+            is RecordState.Error -> ErrorElement(modifier.padding(innerPadding))
             is RecordState.Success -> {
                 RecordScreenSuccess(
                     state = state,
@@ -59,28 +61,6 @@ fun RecordScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun RecordScreenLoading(
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier,
-    ) {
-
-    }
-}
-
-@Composable
-private fun RecordScreenError(
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier,
-    ) {
-
     }
 }
 

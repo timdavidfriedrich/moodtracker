@@ -93,6 +93,13 @@ class LocalDataSourceImpl(
         return database.momentRecordDao().getMomentRecordById(id)
     }
 
+    override fun getMomentRecordByDateRange(
+        startDate: Date,
+        endDate: Date,
+    ): Flow<MomentRecordEntity?> {
+        return database.momentRecordDao().getMomentRecordByDateRange(startDate, endDate)
+    }
+
     override suspend fun deleteMomentRecord(momentRecord: MomentRecordEntity) {
         database.momentRecordDao().deleteMomentRecord(momentRecord)
     }
