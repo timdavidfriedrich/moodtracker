@@ -9,7 +9,7 @@ import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteDayRecordUs
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.DeleteMomentRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetAllAvailableEmotionsUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateDayRecordByDateUseCase
-import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateMomentRecordByDate
+import de.timdavidfriedrich.moodtracker.record.domain.usecases.GetOrCreateMomentRecordByDateUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveDayRecordUseCase
 import de.timdavidfriedrich.moodtracker.record.domain.usecases.SaveMomentRecordUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ class RecordViewModel(
     recordTimestamp: Long? = null,
     private val getAllAvailableEmotionsUseCase: GetAllAvailableEmotionsUseCase,
     private val getOrCreateDayRecordByDateUseCase: GetOrCreateDayRecordByDateUseCase,
-    private val getOrCreateMomentRecordByDate: GetOrCreateMomentRecordByDate,
+    private val getOrCreateMomentRecordByDateUseCase: GetOrCreateMomentRecordByDateUseCase,
     private val saveDayRecordUseCase: SaveDayRecordUseCase,
     private val deleteDayRecordUseCase: DeleteDayRecordUseCase,
     private val saveMomentRecordUseCase: SaveMomentRecordUseCase,
@@ -36,6 +36,26 @@ class RecordViewModel(
 
     fun loadPreviousState(previousState: RecordState) {
         state.update { previousState }
+    }
+
+    private var initialRecord: Record? = null
+
+    val recordHasBeenChanged = {
+        when {
+            state.value !is RecordState.Success -> true
+
+            recordScreenType == RecordScreenType.DAY -> {
+                val currentRecord = (state.value as RecordState.Success.Day).record
+                currentRecord != (initialRecord as Record.Day)
+            }
+
+            recordScreenType == RecordScreenType.MOMENT -> {
+                val currentRecord = (state.value as RecordState.Success.Moment).record
+                currentRecord != (initialRecord as Record.Moment)
+            }
+
+            else -> true
+        }
     }
 
     init {
@@ -53,8 +73,7 @@ class RecordViewModel(
 
     private fun initAvailableEmotions() {
         viewModelScope.launch {
-            getAllAvailableEmotionsUseCase()
-                .catch { state.update { RecordState.Error.Data } }
+            getAllAvailableEmotionsUseCase().catch { state.update { RecordState.Error.Data } }
                 .collect { emotions ->
                     state.update { currentState ->
                         when (currentState) {
@@ -76,16 +95,16 @@ class RecordViewModel(
     private fun initDayRecordScreen(recordTimestamp: Long? = null) {
         viewModelScope.launch {
             val date = recordTimestamp?.let { Date(it) }
-            getOrCreateDayRecordByDateUseCase(date)
-                .catch { state.update { RecordState.Error.Data } }
-                .stateIn(viewModelScope)
-                .collect { dayRecord ->
+            getOrCreateDayRecordByDateUseCase(date).catch { state.update { RecordState.Error.Data } }
+                .stateIn(viewModelScope).collect { dayRecord ->
+                    if (initialRecord == null) initialRecord = dayRecord
                     state.update { current ->
                         when (current) {
                             is RecordState.Success.Day -> current.copy(record = dayRecord)
                             else -> RecordState.Success.Day(dayRecord)
                         }
                     }
+
                 }
         }
     }
@@ -93,15 +112,16 @@ class RecordViewModel(
     private fun initMomentRecordScreen(recordTimestamp: Long? = null) {
         viewModelScope.launch {
             val date = recordTimestamp?.let { Date(it) }
-            val momentRecord = getOrCreateMomentRecordByDate(date)
-                .catch { state.update { RecordState.Error.Data } }
-                .stateIn(viewModelScope).value
-            state.update { current ->
-                when (current) {
-                    is RecordState.Success.Moment -> current.copy(record = momentRecord)
-                    else -> RecordState.Success.Moment(momentRecord)
+            getOrCreateMomentRecordByDateUseCase(date).catch { state.update { RecordState.Error.Data } }
+                .stateIn(viewModelScope).collect { momentRecord ->
+                    if (initialRecord == null) initialRecord = momentRecord
+                    state.update { current ->
+                        when (current) {
+                            is RecordState.Success.Moment -> current.copy(record = momentRecord)
+                            else -> RecordState.Success.Moment(momentRecord)
+                        }
+                    }
                 }
-            }
         }
     }
 
@@ -113,7 +133,7 @@ class RecordViewModel(
             is RecordAction.RequestDeleteRecord -> toggleDeleteConfirmationDialog(true)
             is RecordAction.CancelDeleteRecord -> toggleDeleteConfirmationDialog(false)
             is RecordAction.DeleteRecord -> deleteRecord()
-            is RecordAction.RequestBackClick -> toggleBackConfirmationDialog(true)
+            is RecordAction.RequestBackClick -> requestBackClick()
             is RecordAction.CancelBackClick -> toggleBackConfirmationDialog(false)
             is RecordAction.BackClick -> navigateBack()
             is RecordAction.Day.AddMomentRecord -> navigateToMomentRecord()
@@ -136,8 +156,7 @@ class RecordViewModel(
             when (it) {
                 is RecordState.Success.Moment -> {
                     val updatedRecord = it.record.copy(
-                        mood = it.record.mood
-                            ?.copy(score = score.toDouble())
+                        mood = it.record.mood?.copy(score = score.toDouble())
                             ?: Mood(score = score.toDouble())
                     )
                     it.copy(record = updatedRecord)
@@ -175,6 +194,14 @@ class RecordViewModel(
             }
         }
         navigateBack()
+    }
+
+    private fun requestBackClick() {
+        if (recordHasBeenChanged()) {
+            toggleBackConfirmationDialog(true)
+        } else {
+            navigateBack()
+        }
     }
 
     private fun toggleDeleteConfirmationDialog(visible: Boolean) {

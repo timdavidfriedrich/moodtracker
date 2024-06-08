@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import java.util.Date
 
-class GetOrCreateMomentRecordByDate(
+class GetOrCreateMomentRecordByDateUseCase(
     private val recordRepository: RecordRepository,
 ) {
     operator fun invoke(date: Date?): Flow<Record.Moment> {
